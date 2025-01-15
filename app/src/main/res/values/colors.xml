@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="sunny_background">#FFEB3B</color>
+    <color name="rainy_background">#2196F3</color>
+    <color name="cloudy_background">#B0BEC5</color>
+    <color name="green_aqi">#00E400</color>  <!-- Good -->
+    <color name="yellow_aqi">#FFFF00</color> <!-- Moderate -->
+    <color name="orange_aqi">#FF7E00</color> <!-- Unhealthy for sensitive groups -->
+    <color name="red_aqi">#FF0000</color>    <!-- Unhealthy -->
+</resources>
