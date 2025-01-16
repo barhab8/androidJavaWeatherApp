@@ -34,6 +34,16 @@ import com.google.android.gms.location.LocationServices;
 import com.google.protobuf.StringValue;
 import com.squareup.picasso.Picasso;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+
+
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -54,6 +64,8 @@ public class WeatherFragment extends Fragment {
     private ImageView backgroundImage;
     private ForecastProcessor forecastProcessor;
     private android.widget.TextView tvAirQualityIndex, tvMainPollutants;
+    BarChart aqiBarChart;
+
 
 
 
@@ -92,6 +104,7 @@ public class WeatherFragment extends Fragment {
         rootLayout = view.findViewById(R.id.rootLayout);
         backgroundImage = view.findViewById(R.id.backgroundImage);
         tvAirQualityIndex = view.findViewById(R.id.tvAirQualityIndex);
+        aqiBarChart = view.findViewById(R.id.aqiBarChart);
 
 
 
@@ -239,6 +252,7 @@ public class WeatherFragment extends Fragment {
             public void onResponse(Call<AirPollutionResponse> call, Response<AirPollutionResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     updateAirQualityUI(response.body());
+                    populateAQIChart(aqiBarChart, response.body().getAirQualityList());
                 } else {
                     Toast.makeText(requireContext(), "Failed to fetch air quality data", Toast.LENGTH_SHORT).show();
                     Log.e("AQI", String.valueOf(response));
@@ -282,8 +296,76 @@ public class WeatherFragment extends Fragment {
             AirPollutionResponse.AirQuality airQuality = airPollutionResponse.getAirQualityList().get(0);
             int aqi = airQuality.getMain().getAqi();
             tvAirQualityIndex.setText(String.format("Air Quality Index (AQI): %d", aqi));
+
         }
     }
+
+    private void populateAQIChart(BarChart chart, List<AirPollutionResponse.AirQuality> airQualityList) {
+        // Create a list of BarEntry for the chart
+        List<BarEntry> entries = new ArrayList<BarEntry>();
+        List<String> labels = new ArrayList<String>();
+
+        for (int i = 0; i < airQualityList.size(); i++) {
+            AirPollutionResponse.AirQuality airQuality = airQualityList.get(i);
+            entries.add(new BarEntry(i, airQuality.getMain().getAqi()));
+
+            // Convert timestamp to readable date
+            String dateLabel = new java.text.SimpleDateFormat("MM/dd HH:mm", java.util.Locale.getDefault())
+                    .format(new java.util.Date(airQuality.getTimestamp() * 1000));
+            labels.add(dateLabel);
+        }
+
+        // Create a dataset and give it a type
+        BarDataSet dataSet = new BarDataSet(entries, "AQI Levels");
+        dataSet.setColors(getAQIColors(entries)); // Set custom colors for AQI levels
+        dataSet.setValueTextColor(android.graphics.Color.WHITE); // Value text color
+        dataSet.setValueTextSize(10f);
+
+        // Create the BarData object and set it to the chart
+        BarData barData = new BarData(dataSet);
+        chart.setData(barData);
+
+        // Disable X-axis
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setEnabled(false); // Remove the X-axis entirely
+
+        // Configure Y-axis (AQI values)
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setTextColor(android.graphics.Color.WHITE);
+        leftAxis.setAxisMinimum(0f); // Minimum AQI
+        leftAxis.setAxisMaximum(5f); // AQI ranges from 1 to 5
+
+        YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setEnabled(false); // Disable the right Y-axis
+
+        // Configure chart appearance
+        chart.getLegend().setTextColor(android.graphics.Color.WHITE);
+        chart.getDescription().setEnabled(false); // Disable description text
+        chart.invalidate(); // Refresh the chart
+    }
+
+    private List<Integer> getAQIColors(List<BarEntry> entries) {
+        List<Integer> colors = new ArrayList<>();
+        for (BarEntry entry : entries) {
+            float aqi = entry.getY();
+            if (aqi == 1) {
+                colors.add(android.graphics.Color.GREEN); // Good
+            } else if (aqi == 2) {
+                colors.add(android.graphics.Color.YELLOW); // Moderate
+            } else if (aqi == 3) {
+                colors.add(android.graphics.Color.parseColor("#FFA500")); // Unhealthy for sensitive groups
+            } else if (aqi == 4) {
+                colors.add(android.graphics.Color.RED); // Unhealthy
+            } else if (aqi == 5) {
+                colors.add(android.graphics.Color.MAGENTA); // Very Unhealthy
+            } else {
+                colors.add(android.graphics.Color.GRAY); // Default
+            }
+        }
+        return colors;
+    }
+
+
 
 
     private void updateUI(WeatherResponse weather) {

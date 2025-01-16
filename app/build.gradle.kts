@@ -52,5 +52,7 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
     implementation("org.osmdroid:osmdroid-android:6.1.13")
+    implementation(libs.mpandroidchart)
+
 
 }
