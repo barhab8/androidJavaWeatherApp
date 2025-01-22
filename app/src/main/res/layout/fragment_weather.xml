@@ -191,6 +191,9 @@
                 android:clipToPadding="false"
                 android:scrollbars="horizontal"
                 android:nestedScrollingEnabled="true" />
+
+            <com.github.mikephil.charting.charts.LineChart android:id="@+id/forecastChart" android:layout_width="match_parent" android:layout_height="300dp" android:layout_margin="16dp"/>
+
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

@@ -25,6 +25,9 @@ public class ForecastResponse {
         @SerializedName("dt_txt")
         private String dateTime;
 
+        @SerializedName("dt")
+        private String DT;
+
         @SerializedName("main")
         private Main main;
 
@@ -36,6 +39,9 @@ public class ForecastResponse {
 
         public String getDateTime() {
             return dateTime;
+        }
+        public String getDT() {
+            return DT;
         }
 
         public Main getMain() {
