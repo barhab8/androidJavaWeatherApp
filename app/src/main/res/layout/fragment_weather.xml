@@ -159,14 +159,6 @@
                 android:text="Air Quality Index (AQI): --"
                 android:layout_marginBottom="8dp" />
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/aqiBarChart"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_marginBottom="16dp"
-                android:background="#20000000"
-                />
-
             <!-- Divider -->
             <View
                 android:layout_width="match_parent"

@@ -120,7 +120,6 @@ public class WeatherFragment extends Fragment {
         rootLayout = view.findViewById(R.id.rootLayout);
 
         // charts
-        aqiBarChart = view.findViewById(R.id.aqiBarChart);
         forecastChart = view.findViewById(R.id.forecastChart);
 
 
@@ -243,18 +242,17 @@ public class WeatherFragment extends Fragment {
             public void onResponse(Call<AirPollutionResponse> call, Response<AirPollutionResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     UIHelper.updateAirQualityUI(response.body(), tvAirQualityIndex);
-                    ChartHelper.populateAQIChart(aqiBarChart, response.body().getAirQualityList());
                 } else {
                     showToast("Failed to fetch air quality data.");
                 }
             }
-
             @Override
             public void onFailure(Call<AirPollutionResponse> call, Throwable t) {
                 showToast("Error fetching air quality data: " + t.getMessage());
             }
         });
     }
+
 
 
     private void fetchAirQualityByCity(String city) {
@@ -277,6 +275,7 @@ public class WeatherFragment extends Fragment {
             }
         });
     }
+
 
     private void updateWeatherUI(WeatherResponse weather) {
         tvWeatherLocation.setText(weather.getCity());

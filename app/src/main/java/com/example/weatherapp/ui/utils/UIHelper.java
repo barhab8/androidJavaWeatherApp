@@ -70,7 +70,35 @@ public class UIHelper {
         if (!airPollutionResponse.getAirQualityList().isEmpty()) {
             AirPollutionResponse.AirQuality airQuality = airPollutionResponse.getAirQualityList().get(0);
             int aqi = airQuality.getMain().getAqi();
+
+            // Set AQI text
             tvAirQualityIndex.setText(String.format("Air Quality Index (AQI): %d", aqi));
+
+            // Change text color based on AQI level
+            int color;
+            switch (aqi) {
+                case 1:
+                    color = 0xFF00E676; // Green - Good
+                    break;
+                case 2:
+                    color = 0xFFFFFF00; // Yellow - Moderate
+                    break;
+                case 3:
+                    color = 0xFFFF9800; // Orange - Unhealthy for Sensitive Groups
+                    break;
+                case 4:
+                    color = 0xFFFF5722; // Red - Unhealthy
+                    break;
+                case 5:
+                    color = 0xFFB71C1C; // Dark Red - Hazardous
+                    break;
+                default:
+                    color = 0xFFFFFFFF; // White - Unknown
+                    break;
+            }
+            tvAirQualityIndex.setTextColor(color);
         }
     }
+
 }
+
