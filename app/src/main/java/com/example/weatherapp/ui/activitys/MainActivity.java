@@ -1,4 +1,4 @@
-package com.example.weatherapp.activitys;
+package com.example.weatherapp.ui.activitys;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

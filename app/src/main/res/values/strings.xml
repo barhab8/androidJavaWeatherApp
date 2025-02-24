@@ -8,5 +8,10 @@
             <item>Imperial (°F)</item>
             <item>Standard (K)</item>
         </string-array>
+        <string-array name="map_providers">
+            <item>World Weather Online</item>
+            <item>OpenWeatherMap</item>
+            <item>Zoom Earth</item>
+        </string-array>
 
 </resources>
