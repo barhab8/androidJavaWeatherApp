@@ -1,9 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base Theme using Material 3 -->
     <style name="Base.Theme.WeatherApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#000000</item>  <!-- Black Toolbar -->
+        <item name="colorOnPrimary">#FFFFFF</item> <!-- White title & icons -->
     </style>
 
+    <!-- Main App Theme extending Base Theme -->
     <style name="Theme.WeatherApp" parent="Base.Theme.WeatherApp" />
 </resources>

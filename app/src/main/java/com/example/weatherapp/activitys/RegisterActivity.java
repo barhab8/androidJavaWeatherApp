@@ -1,4 +1,4 @@
-package com.example.weatherapp;
+package com.example.weatherapp.activitys;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,7 +15,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.weatherapp.ui.fragments.WeatherFragment;
+import com.example.weatherapp.MyUser;
+import com.example.weatherapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 

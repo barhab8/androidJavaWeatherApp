@@ -1,6 +1,8 @@
 package com.example.weatherapp.ui.fragments;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,7 +45,7 @@ public class WeatherFragment extends Fragment {
 
     // Constants
     private static final String TAG = "WeatherFragment";
-    private static final String UNIT = "metric";
+    private static String UNIT = "metric";
     private static final String ICON_URL_TEMPLATE = "https://openweathermap.org/img/wn/%s@2x.png";
 
     // UI Elements
@@ -59,6 +61,10 @@ public class WeatherFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private BarChart aqiBarChart;
     private LineChart forecastChart;
+
+    // settings varibaels
+    private static final String PREFS_NAME = "weather_prefs";
+    private static final String UNIT_KEY = "unit";
 
 
 
@@ -126,7 +132,7 @@ public class WeatherFragment extends Fragment {
         // RecyclerView setup for forecast
         forecastRecyclerView = view.findViewById(R.id.forecastRecyclerView);
         forecastRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        forecastAdapter = new ForecastAdapter();
+        forecastAdapter = new ForecastAdapter(getContext());
         forecastRecyclerView.setAdapter(forecastAdapter);
     }
 
@@ -136,6 +142,22 @@ public class WeatherFragment extends Fragment {
         weatherRepository = new WeatherRepository();
         forecastProcessor = new ForecastProcessor();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkAndUpdateWeather();
+    }
+
+    private void checkAndUpdateWeather() {
+        SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String newUnit = prefs.getString(UNIT_KEY, "metric");
+
+        if (!newUnit.equals(UNIT)) { // Only update if unit changed
+            UNIT = newUnit;
+        }
+    }
+
 
     private void fetchWeatherByLocation() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -147,7 +169,7 @@ public class WeatherFragment extends Fragment {
                     fetch5DayForecastByCoordinates(latitude, longitude);
                     fetchAirQuality(latitude, longitude);
                 } else {
-                    showToast("Unable to fetch location.");
+                    showToast("Unable to fetch location." );
                 }
             }).addOnFailureListener(e -> showToast("Error fetching location: " + e.getMessage()));
         }
@@ -278,12 +300,33 @@ public class WeatherFragment extends Fragment {
 
 
     private void updateWeatherUI(WeatherResponse weather) {
+        String tempUnitSymbol;
+        String windSpeedUnit;
+        double windSpeed = weather.getWind().getSpeed();
+
+        // Determine unit symbols based on selected unit
+        switch (UNIT) {
+            case "imperial":
+                tempUnitSymbol = "°F";
+                windSpeedUnit = " mph";
+                break;
+            case "standard":
+                tempUnitSymbol = " K";
+                windSpeedUnit = " m/s";
+                break;
+            default:
+                tempUnitSymbol = "°C";
+                windSpeedUnit = " m/s";
+                break;
+        }
+
+        // Update UI elements
         tvWeatherLocation.setText(weather.getCity());
-        tvWeatherTemperature.setText(String.format("%s°C", weather.getMain().getTemp()));
+        tvWeatherTemperature.setText(String.format("%s%s", weather.getMain().getTemp(), tempUnitSymbol));
         tvWeatherDescription.setText(weather.getWeather()[0].getDescription());
         tvWeatherHumidity.setText(String.format("Humidity: %s%%", weather.getMain().getHumidity()));
         tvWeatherVisibility.setText(String.format("Visibility: %d km", Integer.parseInt(weather.getVisibilit()) / 1000));
-        tvWeatherWindSpeed.setText(String.format("Wind Speed: %s m/s", weather.getWind().getSpeed()));
+        tvWeatherWindSpeed.setText(String.format("Wind Speed: %.1f%s", windSpeed, windSpeedUnit));
         tvWeatherWindDegree.setText(String.format("Wind Degree: %s°", weather.getWind().getDegree()));
 
         // Load weather icon
@@ -293,6 +336,7 @@ public class WeatherFragment extends Fragment {
         // Update background
         UIHelper.updateBackground(rootLayout, weather.getWeather()[0].getIcon());
     }
+
 
     private void showToast(String message) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
