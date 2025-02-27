@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +34,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -62,11 +62,9 @@ public class WeatherFragment extends Fragment {
     private BarChart aqiBarChart;
     private LineChart forecastChart;
 
-    // settings varibaels
+    // Settings variables
     private static final String PREFS_NAME = "weather_prefs";
     private static final String UNIT_KEY = "unit";
-
-
 
     // Data & Utilities
     private WeatherRepository weatherRepository;
@@ -101,7 +99,7 @@ public class WeatherFragment extends Fragment {
         btnSearch.setOnClickListener(v -> {
             String city = etCityName.getText().toString().trim();
             if (!city.isEmpty()) {
-                fetchWeatherByCity(city);
+                fetchWeatherDataByCity(city);
             } else {
                 showToast("Please enter a city name.");
             }
@@ -111,7 +109,6 @@ public class WeatherFragment extends Fragment {
     }
 
     private void initializeUI(View view) {
-        // Initialize UI elements
         etCityName = view.findViewById(R.id.etCityName);
         btnSearch = view.findViewById(R.id.btnSearch);
         ivWeatherIcon = view.findViewById(R.id.ivWeatherIcon);
@@ -128,7 +125,6 @@ public class WeatherFragment extends Fragment {
         // charts
         forecastChart = view.findViewById(R.id.forecastChart);
 
-
         // RecyclerView setup for forecast
         forecastRecyclerView = view.findViewById(R.id.forecastRecyclerView);
         forecastRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -137,7 +133,6 @@ public class WeatherFragment extends Fragment {
     }
 
     private void initializeDependencies() {
-        // Initialize dependencies
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
         weatherRepository = new WeatherRepository();
         forecastProcessor = new ForecastProcessor();
@@ -146,56 +141,98 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        checkAndUpdateWeather();
-    }
-
-    private void checkAndUpdateWeather() {
         SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         String newUnit = prefs.getString(UNIT_KEY, "metric");
-
         if (!newUnit.equals(UNIT)) { // Only update if unit changed
             UNIT = newUnit;
         }
     }
 
-
+    // Modified method for location-based weather fetching using lat/lon
     private void fetchWeatherByLocation() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
                 if (location != null) {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
-                    fetchWeatherByCoordinates(latitude, longitude);
-                    fetch5DayForecastByCoordinates(latitude, longitude);
-                    fetchAirQuality(latitude, longitude);
+                    fetchWeatherDataByCoordinates(latitude, longitude);
                 } else {
-                    showToast("Unable to fetch location." );
+                    showToast("Unable to fetch location.");
                 }
             }).addOnFailureListener(e -> showToast("Error fetching location: " + e.getMessage()));
         }
     }
 
-    private void fetchWeatherByCity(String city) {
+    // 1 - City-based API calls grouped together
+    private void fetchWeatherDataByCity(String city) {
+        // Fetch weather data by city
         weatherRepository.fetchWeatherByCity(city, UNIT).enqueue(new Callback<WeatherResponse>() {
             @Override
             public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     updateWeatherUI(response.body());
-                    fetch5DayForecast(city);
-                    fetchAirQualityByCity(city);
                 } else {
                     showToast("City not found.");
                 }
             }
-
             @Override
             public void onFailure(Call<WeatherResponse> call, Throwable t) {
                 showToast("Error fetching weather: " + t.getMessage());
             }
         });
+        // Fetch 5-day forecast by city
+        weatherRepository.fetch5DayForecast(city, UNIT).enqueue(new Callback<ForecastResponse>() {
+            @Override
+            public void onResponse(Call<ForecastResponse> call, Response<ForecastResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<ForecastResponse.ForecastItem> forecastList = response.body().getForecastList();
+                    forecastAdapter.setForecastList(forecastList);
+                    ChartHelper.populateForecastChart(forecastChart, forecastList);
+                } else {
+                    showToast("Failed to fetch forecast.");
+                }
+            }
+            @Override
+            public void onFailure(Call<ForecastResponse> call, Throwable t) {
+                showToast("Error fetching forecast: " + t.getMessage());
+            }
+        });
+        // Fetch air quality by first getting coordinates for the city
+        weatherRepository.getCoordinatesByCity(city).enqueue(new Callback<List<GeocodingResponse>>() {
+            @Override
+            public void onResponse(Call<List<GeocodingResponse>> call, Response<List<GeocodingResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    GeocodingResponse geocodingResponse = response.body().get(0);
+                    double latitude = geocodingResponse.getLatitude();
+                    double longitude = geocodingResponse.getLongitude();
+                    weatherRepository.getAirPollutionData(latitude, longitude).enqueue(new Callback<AirPollutionResponse>() {
+                        @Override
+                        public void onResponse(Call<AirPollutionResponse> call, Response<AirPollutionResponse> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                UIHelper.updateAirQualityUI(response.body(), tvAirQualityIndex);
+                            } else {
+                                showToast("Failed to fetch air quality data.");
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<AirPollutionResponse> call, Throwable t) {
+                            showToast("Error fetching air quality data: " + t.getMessage());
+                        }
+                    });
+                } else {
+                    showToast("City not found.");
+                }
+            }
+            @Override
+            public void onFailure(Call<List<GeocodingResponse>> call, Throwable t) {
+                showToast("Error fetching city coordinates: " + t.getMessage());
+            }
+        });
     }
 
-    private void fetchWeatherByCoordinates(double latitude, double longitude) {
+    // 2 - Latitude/Longitude-based API calls grouped together
+    private void fetchWeatherDataByCoordinates(double latitude, double longitude) {
+        // Fetch weather data by coordinates
         weatherRepository.fetchWeatherByCoordinates(latitude, longitude, UNIT).enqueue(new Callback<WeatherResponse>() {
             @Override
             public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
@@ -205,60 +242,29 @@ public class WeatherFragment extends Fragment {
                     showToast("Unable to fetch weather for your location.");
                 }
             }
-
             @Override
             public void onFailure(Call<WeatherResponse> call, Throwable t) {
                 showToast("Error fetching weather: " + t.getMessage());
             }
         });
-    }
-
-    private void fetch5DayForecast(String city) {
-        weatherRepository.fetch5DayForecast(city, UNIT).enqueue(new Callback<ForecastResponse>() {
-            @Override
-            public void onResponse(Call<ForecastResponse> call, Response<ForecastResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<ForecastResponse.ForecastItem> forecastList = response.body().getForecastList();
-                    forecastAdapter.setForecastList(forecastList);
-                    ChartHelper.populateForecastChart(forecastChart, forecastList);
-
-
-                } else {
-                    showToast("Failed to fetch forecast.");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ForecastResponse> call, Throwable t) {
-                showToast("Error fetching forecast: " + t.getMessage());
-            }
-        });
-    }
-
-    private void fetch5DayForecastByCoordinates(double latitude, double longitude) {
+        // Fetch 5-day forecast by coordinates
         weatherRepository.fetch5DayForecastByCoordinates(latitude, longitude, UNIT).enqueue(new Callback<ForecastResponse>() {
             @Override
             public void onResponse(Call<ForecastResponse> call, Response<ForecastResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // Use raw data for chart and daily forecast for RecyclerView
                     List<ForecastResponse.ForecastItem> forecastList = response.body().getForecastList();
                     forecastAdapter.setForecastList(forecastProcessor.getDailyForecast(forecastList));
                     ChartHelper.populateForecastChart(forecastChart, forecastList);
-
                 } else {
                     showToast("Failed to fetch forecast.");
                 }
             }
-
             @Override
             public void onFailure(Call<ForecastResponse> call, Throwable t) {
                 showToast("Error fetching forecast: " + t.getMessage());
             }
         });
-    }
-
-
-    private void fetchAirQuality(double latitude, double longitude) {
+        // Fetch air quality by coordinates
         weatherRepository.getAirPollutionData(latitude, longitude).enqueue(new Callback<AirPollutionResponse>() {
             @Override
             public void onResponse(Call<AirPollutionResponse> call, Response<AirPollutionResponse> response) {
@@ -274,30 +280,6 @@ public class WeatherFragment extends Fragment {
             }
         });
     }
-
-
-
-    private void fetchAirQualityByCity(String city) {
-        weatherRepository.getCoordinatesByCity(city).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<GeocodingResponse>> call, Response<List<GeocodingResponse>> response) {
-                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
-                    GeocodingResponse geocodingResponse = response.body().get(0);
-                    double latitude = geocodingResponse.getLatitude();
-                    double longitude = geocodingResponse.getLongitude();
-                    fetchAirQuality(latitude, longitude);
-                } else {
-                    showToast("City not found.");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<GeocodingResponse>> call, Throwable t) {
-                showToast("Error fetching city coordinates: " + t.getMessage());
-            }
-        });
-    }
-
 
     private void updateWeatherUI(WeatherResponse weather) {
         String tempUnitSymbol;
@@ -320,7 +302,6 @@ public class WeatherFragment extends Fragment {
                 break;
         }
 
-        // Update UI elements
         tvWeatherLocation.setText(weather.getCity());
         tvWeatherTemperature.setText(String.format("%s%s", weather.getMain().getTemp(), tempUnitSymbol));
         tvWeatherDescription.setText(weather.getWeather()[0].getDescription());
@@ -336,7 +317,6 @@ public class WeatherFragment extends Fragment {
         // Update background
         UIHelper.updateBackground(rootLayout, weather.getWeather()[0].getIcon());
     }
-
 
     private void showToast(String message) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();

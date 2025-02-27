@@ -30,7 +30,6 @@ public class MapFragment extends Fragment {
         // Initialize the WebView
         webView = view.findViewById(R.id.webView);
         setupWebView();
-
         // Load the selected map URL
         loadSelectedMap();
 
