@@ -24,41 +24,60 @@
             android:gravity="center_horizontal"
             tools:ignore="MissingClass">
 
-            <!-- Search Bar -->
+            <!-- Top Bar (Star Icon + Search Bar) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="24dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/rounded_background"
-                android:elevation="4dp"
                 android:padding="8dp">
 
-                <EditText
-                    android:id="@+id/etCityName"
+                <ImageButton
+                    android:id="@+id/btnFavorite"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_star_outline"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Favorite"
+                    android:scaleType="centerInside"
+                    android:padding="4dp"/>
+
+
+                <!-- Search Bar -->
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Enter city name"
-                    android:inputType="text"
-                    android:padding="12dp"
-                    android:textColor="#000000"
-                    android:textColorHint="#757575"
-                    android:background="@null" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/rounded_background"
+                    android:elevation="4dp"
+                    android:padding="8dp">
 
-                <ImageButton
-                    android:id="@+id/btnSearch"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_search"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Search"
-                    android:scaleType="centerInside" />
+                    <EditText
+                        android:id="@+id/etCityName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Enter city name"
+                        android:inputType="text"
+                        android:padding="12dp"
+                        android:textColor="#000000"
+                        android:textColorHint="#757575"
+                        android:background="@null" />
+
+                    <ImageButton
+                        android:id="@+id/btnSearch"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_search"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Search"
+                        android:scaleType="centerInside" />
+                </LinearLayout>
             </LinearLayout>
 
-            <!-- Current Weather Icon -->
+            <!-- Weather Content -->
             <ImageView
                 android:id="@+id/ivWeatherIcon"
                 android:layout_width="64dp"
@@ -66,10 +85,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="Weather Icon"
                 android:scaleType="centerInside"
-                android:padding="8dp"
-                android:background="@drawable/circle_highlight_background" />
+                android:padding="8dp" />
 
-            <!-- Current Weather Details -->
             <TextView
                 android:id="@+id/tvWeatherLocation"
                 android:layout_width="wrap_content"
@@ -78,13 +95,7 @@
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
                 android:layout_marginBottom="8dp"
-                android:textAlignment="center"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:shadowColor="#000000"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="1" />
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/tvWeatherTemperature"
@@ -93,11 +104,7 @@
                 android:textSize="48sp"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
-                android:layout_marginBottom="4dp"
-                android:shadowColor="#000000"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="1" />
+                android:layout_marginBottom="4dp" />
 
             <TextView
                 android:id="@+id/tvWeatherDescription"
@@ -107,11 +114,7 @@
                 android:textColor="#B3E5FC"
                 android:textStyle="italic"
                 android:layout_marginBottom="24dp"
-                android:textAlignment="center"
-                android:shadowColor="#000000"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="1" />
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/tvWeatherHumidity"
@@ -149,7 +152,7 @@
                 android:layout_marginBottom="16dp"
                 android:text="Wind Degree: --°" />
 
-            <!-- Air Quality Information Section -->
+            <!-- Air Quality -->
             <TextView
                 android:id="@+id/tvAirQualityIndex"
                 android:layout_width="wrap_content"
@@ -159,14 +162,7 @@
                 android:text="Air Quality Index (AQI): --"
                 android:layout_marginBottom="8dp" />
 
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#FFFFFF"
-                android:layout_marginVertical="16dp" />
-
-            <!-- 5-Day Forecast RecyclerView -->
+            <!-- 5-Day Forecast -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -180,12 +176,10 @@
                 android:id="@+id/forecastRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clipToPadding="false"
                 android:scrollbars="horizontal"
                 android:nestedScrollingEnabled="true" />
 
             <com.github.mikephil.charting.charts.LineChart android:id="@+id/forecastChart" android:layout_width="match_parent" android:layout_height="300dp" android:layout_margin="16dp"/>
-
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
