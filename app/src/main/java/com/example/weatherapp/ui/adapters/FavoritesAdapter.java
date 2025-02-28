@@ -5,10 +5,12 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.weatherapp.R;
+import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     private List<String> cities;
     private Map<String, String> cityTemperatures = new HashMap<>();
+    private Map<String, String> cityIcons = new HashMap<>();
     private final OnCityClickListener onCityClickListener;
     private String unit;
     private String unitSymbol;
@@ -27,7 +30,6 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     public FavoritesAdapter(Context context, OnCityClickListener listener) {
         this.onCityClickListener = listener;
-
         SharedPreferences prefs = context.getSharedPreferences("weather_prefs", Context.MODE_PRIVATE);
         unit = prefs.getString("unit", "metric");
 
@@ -50,7 +52,13 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
     }
 
     public void updateCityTemperature(String city, String temperature) {
+        // The temperature value should already be a string (e.g., "20")—we add the unit symbol here.
         cityTemperatures.put(city, temperature + unitSymbol);
+        notifyDataSetChanged();
+    }
+
+    public void updateCityIcon(String city, String iconUrl) {
+        cityIcons.put(city, iconUrl);
         notifyDataSetChanged();
     }
 
@@ -67,6 +75,13 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         holder.tvCityName.setText(city);
         holder.tvTemperature.setText(cityTemperatures.getOrDefault(city, "Loading..."));
 
+        String iconUrl = cityIcons.get(city);
+        if (iconUrl != null && !iconUrl.isEmpty()) {
+            Picasso.get().load(iconUrl).into(holder.ivWeatherIcon);
+        } else {
+            holder.ivWeatherIcon.setImageResource(R.drawable.ic_weather_placeholder);
+        }
+
         holder.itemView.setOnClickListener(v -> onCityClickListener.onCityClick(city));
     }
 
@@ -77,11 +92,13 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvCityName, tvTemperature;
+        ImageView ivWeatherIcon;
 
         ViewHolder(View itemView) {
             super(itemView);
             tvCityName = itemView.findViewById(R.id.tvCityName);
             tvTemperature = itemView.findViewById(R.id.tvTemperature);
+            ivWeatherIcon = itemView.findViewById(R.id.ivWeatherIcon);
         }
     }
 }

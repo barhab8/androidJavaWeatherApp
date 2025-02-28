@@ -16,7 +16,6 @@ import com.example.weatherapp.data.model.WeatherResponse;
 import com.example.weatherapp.data.repository.WeatherRepository;
 import com.example.weatherapp.ui.adapters.FavoritesAdapter;
 import com.example.weatherapp.ui.utils.FirestoreHelper;
-import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,7 +39,7 @@ public class FavoritesActivity extends AppCompatActivity {
         firestoreHelper = new FirestoreHelper(this);
         weatherRepository = new WeatherRepository();
 
-        // Load user preference for unit
+        // Load unit preference from SharedPreferences
         SharedPreferences prefs = getSharedPreferences("weather_prefs", Context.MODE_PRIVATE);
         unit = prefs.getString("unit", "metric");
 
@@ -75,11 +74,14 @@ public class FavoritesActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<WeatherResponse> call, @NonNull Response<WeatherResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    String temp = String.valueOf(response.body().getMain().getTemp());
+                    WeatherResponse weather = response.body();
+                    String temp = String.valueOf(weather.getMain().getTemp());
                     favoritesAdapter.updateCityTemperature(city, temp);
+                    String iconCode = weather.getWeather()[0].getIcon();
+                    String iconUrl = String.format("https://openweathermap.org/img/wn/%s@2x.png", iconCode);
+                    favoritesAdapter.updateCityIcon(city, iconUrl);
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call<WeatherResponse> call, @NonNull Throwable t) {
                 favoritesAdapter.updateCityTemperature(city, "N/A");

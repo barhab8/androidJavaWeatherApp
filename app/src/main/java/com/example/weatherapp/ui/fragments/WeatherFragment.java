@@ -188,7 +188,7 @@ public class WeatherFragment extends Fragment {
     }
 
     // 1 - City-based API calls grouped together
-    private void fetchWeatherDataByCity(String city) {
+    public void fetchWeatherDataByCity(String city) {
         // Fetch weather data by city
         weatherRepository.fetchWeatherByCity(city, UNIT).enqueue(new Callback<WeatherResponse>() {
             @Override
