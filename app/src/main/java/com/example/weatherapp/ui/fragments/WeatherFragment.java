@@ -27,6 +27,7 @@ import com.example.weatherapp.data.model.WeatherResponse;
 import com.example.weatherapp.data.repository.WeatherRepository;
 import com.example.weatherapp.ui.adapters.ForecastAdapter;
 import com.example.weatherapp.ui.utils.ChartHelper;
+import com.example.weatherapp.ui.utils.FirestoreHelper;
 import com.example.weatherapp.ui.utils.UIHelper;
 import com.example.weatherapp.ui.utils.ForecastProcessor;
 import com.github.mikephil.charting.charts.BarChart;
@@ -44,13 +45,13 @@ import retrofit2.Response;
 public class WeatherFragment extends Fragment {
 
     // Constants
-    private static final String TAG = "WeatherFragment";
     private static String UNIT = "metric";
     private static final String ICON_URL_TEMPLATE = "https://openweathermap.org/img/wn/%s@2x.png";
 
     // UI Elements
     private android.widget.EditText etCityName;
     private android.widget.ImageButton btnSearch;
+    private android.widget.ImageButton btnFavorite;
     private android.widget.ImageView ivWeatherIcon;
     private android.widget.TextView tvWeatherLocation, tvWeatherTemperature, tvWeatherDescription;
     private android.widget.TextView tvWeatherHumidity, tvWeatherVisibility, tvWeatherWindSpeed, tvWeatherWindDegree;
@@ -59,7 +60,6 @@ public class WeatherFragment extends Fragment {
     private ForecastAdapter forecastAdapter;
     private android.widget.LinearLayout rootLayout;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private BarChart aqiBarChart;
     private LineChart forecastChart;
 
     // Settings variables
@@ -69,6 +69,12 @@ public class WeatherFragment extends Fragment {
     // Data & Utilities
     private WeatherRepository weatherRepository;
     private ForecastProcessor forecastProcessor;
+    private FirestoreHelper firestoreHelper;
+
+
+    // boolean for weather the star is filled or not - city favorite or not.
+    private boolean isCityFavorite = false;
+
 
     // Location Permission Launcher
     private final ActivityResultLauncher<String> locationPermissionLauncher =
@@ -87,7 +93,7 @@ public class WeatherFragment extends Fragment {
 
         initializeUI(view);
         initializeDependencies();
-
+        firestoreHelper = new FirestoreHelper(requireContext());
         // Handle location-based weather fetching
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fetchWeatherByLocation();
@@ -95,13 +101,30 @@ public class WeatherFragment extends Fragment {
             locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
         }
 
-        // Handle city-based weather fetching
+        // city-search button.
         btnSearch.setOnClickListener(v -> {
             String city = etCityName.getText().toString().trim();
             if (!city.isEmpty()) {
                 fetchWeatherDataByCity(city);
             } else {
                 showToast("Please enter a city name.");
+            }
+        });
+        // favorite button
+        btnFavorite.setOnClickListener(v -> {
+            String city = tvWeatherLocation.getText().toString().trim();
+            if (!city.isEmpty()) {
+                if (isCityFavorite) {
+                    firestoreHelper.removeCityFromFavorites(city);
+                    btnFavorite.setImageResource(R.drawable.ic_star_outline);
+                    isCityFavorite = false;
+                } else {
+                    firestoreHelper.saveCityToFavorites(city);
+                    btnFavorite.setImageResource(R.drawable.ic_star_filled);
+                    isCityFavorite = true;
+                }
+            } else {
+                showToast("No city found");
             }
         });
 
@@ -111,6 +134,7 @@ public class WeatherFragment extends Fragment {
     private void initializeUI(View view) {
         etCityName = view.findViewById(R.id.etCityName);
         btnSearch = view.findViewById(R.id.btnSearch);
+        btnFavorite = view.findViewById(R.id.btnFavorite);
         ivWeatherIcon = view.findViewById(R.id.ivWeatherIcon);
         tvWeatherLocation = view.findViewById(R.id.tvWeatherLocation);
         tvWeatherTemperature = view.findViewById(R.id.tvWeatherTemperature);
@@ -282,6 +306,8 @@ public class WeatherFragment extends Fragment {
     }
 
     private void updateWeatherUI(WeatherResponse weather) {
+        tvWeatherLocation.setText(weather.getCity());
+        checkIfCityIsFavorite(weather.getCity());
         String tempUnitSymbol;
         String windSpeedUnit;
         double windSpeed = weather.getWind().getSpeed();
@@ -321,4 +347,13 @@ public class WeatherFragment extends Fragment {
     private void showToast(String message) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
+
+
+    private void checkIfCityIsFavorite(String city) {
+        firestoreHelper.loadFavoriteCities(favoriteCities -> {
+            isCityFavorite = favoriteCities.contains(city);
+            btnFavorite.setImageResource(isCityFavorite ? R.drawable.ic_star_filled : R.drawable.ic_star_outline);
+        });
+    }
+
 }
