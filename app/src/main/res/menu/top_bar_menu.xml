@@ -2,8 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_screen1"
+        android:id="@+id/settings_screen"
         android:title="settings screen"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/favorites_screen"
+        android:title="favorites screen"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

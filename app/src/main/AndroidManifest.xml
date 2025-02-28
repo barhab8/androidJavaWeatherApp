@@ -19,6 +19,9 @@
         android:theme="@style/Theme.WeatherApp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activitys.FavoritesActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activitys.SettingsActivity"
             android:exported="false" />
         <activity

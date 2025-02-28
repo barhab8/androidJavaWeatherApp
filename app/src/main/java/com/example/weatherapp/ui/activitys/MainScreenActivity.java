@@ -71,8 +71,11 @@ public class MainScreenActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_screen1) {
+        if (id == R.id.settings_screen) {
              startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        } if (id == R.id.favorites_screen) {
+            startActivity(new Intent(this, FavoritesActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
