@@ -3,4 +3,11 @@
     <item name="etRegisterEmail" type="id" />
     <item name="etRegisterPassword" type="id" />
     <item name="etRegisterFname" type="id" />
+    <item name="btnSelectTime" type="id" />
+    <item name="spinnerMaps" type="id" />
+    <item name="tvSelectMap" type="id" />
+    <item name="tvSelectTheme" type="id" />
+    <item name="spinnerTheme" type="id" />
+    <item name="tvSelectUnit" type="id" />
+    <item name="spinnerUnits" type="id" />
 </resources>
