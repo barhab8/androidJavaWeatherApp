@@ -53,17 +53,21 @@ public class AuthActivity extends AppCompatActivity {
         if (isLogin) {
             fragment = new RegisterFragment();
             btnSwitch.setText("Switch to Login");
+            ((TextView)findViewById(R.id.tvLoginSignup)).setText("SIGN UP");
         } else {
             fragment = new LoginFragment();
             btnSwitch.setText("Switch to Sign Up");
+            ((TextView)findViewById(R.id.tvLoginSignup)).setText("LOGIN");
         }
         isLogin = !isLogin;
 
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                 .replace(R.id.fragment_container, fragment)
                 .commit();
     }
+
 
     public void signUpUser(String fname, String lname, String email, String password) {
         fbAuth.createUserWithEmailAndPassword(email, password)
