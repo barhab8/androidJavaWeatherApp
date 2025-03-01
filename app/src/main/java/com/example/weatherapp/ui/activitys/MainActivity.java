@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.weatherapp.R;
+import com.example.weatherapp.ui.fragments.LoginFragment;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button btnMainRegister;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (!isLoggedIn) {
             Intent intent;
-            intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent = new Intent(MainActivity.this, AuthActivity.class);
             startActivity(intent);
             finish();
             return;

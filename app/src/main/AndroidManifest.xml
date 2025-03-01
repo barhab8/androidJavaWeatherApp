@@ -19,6 +19,9 @@
         android:theme="@style/Theme.WeatherApp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activitys.AuthActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activitys.FavoritesActivity"
             android:exported="false" />
         <activity
@@ -34,14 +37,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activitys.RegisterActivity"
+            android:name=".ui.fragments.RegisterFragment"
             android:exported="false" />
         <activity
             android:name="ui.fragments.WeatherFragment"
             android:exported="false"
             tools:ignore="MissingClass" />
         <activity
-            android:name=".ui.activitys.LoginActivity"
+            android:name=".ui.fragments.LoginFragment"
             android:exported="false" />
         <activity
             android:name=".ui.fragments.UserDetailsFragment"

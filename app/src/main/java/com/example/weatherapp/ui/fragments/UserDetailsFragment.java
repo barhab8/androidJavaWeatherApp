@@ -16,8 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.weatherapp.ui.activitys.LoginActivity;
 import com.example.weatherapp.R;
+import com.example.weatherapp.ui.activitys.AuthActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -119,7 +119,7 @@ public class UserDetailsFragment extends Fragment {
     }
 
     private void redirectToLogin() {
-        Intent intent = new Intent(requireContext(), LoginActivity.class);
+        Intent intent = new Intent(requireContext(), AuthActivity.class);
         startActivity(intent);
         requireActivity().finish();
     }
