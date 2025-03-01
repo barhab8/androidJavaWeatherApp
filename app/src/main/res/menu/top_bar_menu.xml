@@ -2,13 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/settings_screen"
-        android:title="settings screen"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/favorites_screen"
-        android:title="favorites screen"
+        android:title="@string/favorites_screen"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_star_filled"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/settings_screen"
+        android:title="@string/settings_screen"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="ifRoom"/>
+
 </menu>

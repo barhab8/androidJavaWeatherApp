@@ -1,8 +1,17 @@
 <resources>
     <string name="app_name">weather app</string>
     <string name="mapbox_access_token">YOUR_MAPBOX_ACCESS_TOKEN_HERE</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- top bar menu -->
+    <string name="favorites_screen">favorites screen</string>
+    <string name="settings_screen">settings screen</string>
+
+    <string-array name="theme_options">
+        <item>System Default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
     <string-array name="unit_options">
         <item>Metric (°C)</item>
         <item>Imperial (°F)</item>

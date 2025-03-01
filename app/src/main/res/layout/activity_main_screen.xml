@@ -6,15 +6,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#40FFFFFF"
-        app:titleTextColor="@color/black"
+        android:background="?attr/colorSurface"
+        app:titleTextColor="?attr/colorOnSurface"
         android:elevation="4dp"
         app:title="Weather App"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.Material3.Light"/>
 
     <FrameLayout
         android:id="@+id/fragment_container"

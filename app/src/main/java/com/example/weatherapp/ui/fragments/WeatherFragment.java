@@ -210,7 +210,7 @@ public class WeatherFragment extends Fragment {
             public void onResponse(Call<ForecastResponse> call, Response<ForecastResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<ForecastResponse.ForecastItem> forecastList = response.body().getForecastList();
-                    forecastAdapter.setForecastList(forecastList);
+                    forecastAdapter.setForecastList(forecastProcessor.getDailyForecast(forecastList));
                     ChartHelper.populateForecastChart(forecastChart, forecastList);
                 } else {
                     showToast("Failed to fetch forecast.");

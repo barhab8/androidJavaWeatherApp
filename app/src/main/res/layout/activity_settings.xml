@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitys.SettingsActivity">
+    tools:context=".ui.activitys.SettingsActivity">
 
+    <!-- Temperature Unit Label -->
     <TextView
         android:id="@+id/tvSelectUnit"
         android:layout_width="wrap_content"
@@ -18,6 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="50dp"/>
 
+    <!-- Temperature Unit Spinner -->
     <Spinner
         android:id="@+id/spinnerUnits"
         android:layout_width="wrap_content"
@@ -28,6 +31,7 @@
         android:entries="@array/unit_options"
         android:layout_marginTop="20dp"/>
 
+    <!-- Map Provider Label -->
     <TextView
         android:id="@+id/tvSelectMap"
         android:layout_width="wrap_content"
@@ -39,6 +43,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="50dp"/>
 
+    <!-- Map Provider Spinner -->
     <Spinner
         android:id="@+id/spinnerMaps"
         android:layout_width="wrap_content"
@@ -49,12 +54,36 @@
         android:entries="@array/map_providers"
         android:layout_marginTop="20dp"/>
 
+    <!-- Theme Selection Label -->
+    <TextView
+        android:id="@+id/tvSelectTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Theme"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/spinnerMaps"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp"/>
+
+    <!-- Theme Selection Spinner -->
+    <Spinner
+        android:id="@+id/spinnerTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvSelectTheme"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:entries="@array/theme_options"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Save Button (Properly Positioned Below Theme Spinner) -->
     <Button
         android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"
-        app:layout_constraintTop_toBottomOf="@id/spinnerMaps"
+        app:layout_constraintTop_toBottomOf="@id/spinnerTheme"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="30dp"/>

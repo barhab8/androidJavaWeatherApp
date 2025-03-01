@@ -8,5 +8,7 @@
     <color name="green_aqi">#00E400</color>  <!-- Good -->
     <color name="yellow_aqi">#FFFF00</color> <!-- Moderate -->
     <color name="orange_aqi">#FF7E00</color> <!-- Unhealthy for sensitive groups -->
-    <color name="red_aqi">#FF0000</color>    <!-- Unhealthy -->
+    <color name="red_aqi">#FF0000</color><!-- Unhealthy -->
+    <color name="colorPrimary">#BB86FC</color>  <!-- Example override for dark mode -->
+    <color name="colorOnPrimary">#000000</color>
 </resources>
