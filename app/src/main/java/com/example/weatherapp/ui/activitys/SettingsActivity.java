@@ -1,20 +1,33 @@
 package com.example.weatherapp.ui.activitys;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.weatherapp.R;
+import com.example.weatherapp.ui.utils.AlarmReceiver;
+
+import java.util.Calendar;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private static final String TAG = "notification"; // Log Tag
+
     private Spinner spinnerUnits, spinnerMaps, spinnerTheme;
-    private Button btnSave;
+    private Button btnSave, btnSetNotification, btnCancelNotification;
+    private TimePicker timePicker;
+
     private static final String PREFS_NAME = "weather_prefs";
     private static final String UNIT_KEY = "unit";
     private static final String MAP_KEY = "map_provider";
@@ -29,6 +42,9 @@ public class SettingsActivity extends AppCompatActivity {
         spinnerMaps = findViewById(R.id.spinnerMaps);
         spinnerTheme = findViewById(R.id.spinnerTheme);
         btnSave = findViewById(R.id.btnSave);
+        btnSetNotification = findViewById(R.id.btnSetNotification);
+        btnCancelNotification = findViewById(R.id.btnCancelNotification);
+        timePicker = findViewById(R.id.timePicker);
 
         // Load saved preferences
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -38,12 +54,16 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Handle save button click
         btnSave.setOnClickListener(v -> savePreferences());
+        btnSetNotification.setOnClickListener(v -> setDailyNotification());
+        btnCancelNotification.setOnClickListener(v -> cancelNotification());
     }
 
     private void savePreferences() {
         String selectedUnit = getUnitFromIndex(spinnerUnits.getSelectedItemPosition());
         String selectedMap = getMapFromIndex(spinnerMaps.getSelectedItemPosition());
         String selectedTheme = getThemeFromIndex(spinnerTheme.getSelectedItemPosition());
+
+        Log.d(TAG, "Saving preferences: Unit=" + selectedUnit + ", Map=" + selectedMap + ", Theme=" + selectedTheme);
 
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -54,9 +74,46 @@ public class SettingsActivity extends AppCompatActivity {
 
         applyTheme(selectedTheme);
 
+        Log.d(TAG, "Preferences saved. Restarting SettingsActivity to apply theme changes.");
+
         // Restart the activity to apply theme changes
         startActivity(new Intent(this, SettingsActivity.class));
         finish();
+    }
+
+    private void setDailyNotification() {
+        int hour = timePicker.getHour();
+        int minute = timePicker.getMinute();
+
+        Log.d(TAG, "Setting daily notification at " + hour + ":" + minute);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);
+
+        Log.d(TAG, "Daily notification scheduled successfully.");
+        Toast.makeText(this, "Daily Notification Set!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void cancelNotification() {
+        Log.d(TAG, "Cancelling notification...");
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        alarmManager.cancel(pendingIntent);
+
+        Log.d(TAG, "Notification canceled successfully.");
+        Toast.makeText(this, "Notification Canceled!", Toast.LENGTH_SHORT).show();
     }
 
     private int getUnitIndex(String unit) {
@@ -108,6 +165,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void applyTheme(String theme) {
+        Log.d(TAG, "Applying theme: " + theme);
+
         switch (theme) {
             case "light":
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);

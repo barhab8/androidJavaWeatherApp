@@ -10,4 +10,8 @@
     <item name="spinnerTheme" type="id" />
     <item name="tvSelectUnit" type="id" />
     <item name="spinnerUnits" type="id" />
+    <item name="btnSetNotification" type="id" />
+    <item name="btnCancelNotification" type="id" />
+    <item name="timePicker" type="id" />
+    <item name="tvNotificationTime" type="id" />
 </resources>
