@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TimePicker;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.ui.utils.AlarmReceiver;
@@ -38,6 +41,9 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         spinnerUnits = findViewById(R.id.spinnerUnits);
         spinnerMaps = findViewById(R.id.spinnerMaps);
         spinnerTheme = findViewById(R.id.spinnerTheme);
@@ -58,6 +64,23 @@ public class SettingsActivity extends AppCompatActivity {
         btnCancelNotification.setOnClickListener(v -> cancelNotification());
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.only_back_menu, menu);
+        return true;
+    }
+
+    // Handle menu item selections from the top app bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.btnBack) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void savePreferences() {
         String selectedUnit = getUnitFromIndex(spinnerUnits.getSelectedItemPosition());
         String selectedMap = getMapFromIndex(spinnerMaps.getSelectedItemPosition());
@@ -75,9 +98,6 @@ public class SettingsActivity extends AppCompatActivity {
         applyTheme(selectedTheme);
 
         Log.d(TAG, "Preferences saved. Restarting SettingsActivity to apply theme changes.");
-
-        // Restart the activity to apply theme changes
-        startActivity(new Intent(this, SettingsActivity.class));
         finish();
     }
 

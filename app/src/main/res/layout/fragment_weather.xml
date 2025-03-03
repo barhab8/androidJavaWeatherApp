@@ -5,12 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Dynamic Background Image -->
     <ImageView
         android:id="@+id/backgroundImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
 
+    <!-- Semi-Transparent Dark Overlay for better text visibility -->
+    <View
+        android:id="@+id/darkOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#66000000"/>  <!-- 40% Black Transparency -->
+
+    <!-- Scrollable Content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +33,7 @@
             android:gravity="center_horizontal"
             tools:ignore="MissingClass">
 
-            <!-- Top Bar (Star Icon + Search Bar) -->
+            <!-- Top Bar (Favorite Button + Search Bar) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,7 +50,6 @@
                     android:contentDescription="Favorite"
                     android:scaleType="centerInside"
                     android:padding="4dp"/>
-
 
                 <!-- Search Bar -->
                 <LinearLayout
@@ -63,8 +71,8 @@
                         android:inputType="text"
                         android:padding="12dp"
                         android:textColor="#000000"
-                        android:textColorHint="#757575"
-                        android:background="@null" />
+                        android:textColorHint="#B3E5FC"
+                        android:background="@android:color/white"/>
 
                     <ImageButton
                         android:id="@+id/btnSearch"
@@ -94,6 +102,10 @@
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
+                android:shadowColor="#80000000"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="4"
                 android:layout_marginBottom="8dp"
                 android:textAlignment="center" />
 
@@ -104,6 +116,10 @@
                 android:textSize="48sp"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
+                android:shadowColor="#80000000"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="4"
                 android:layout_marginBottom="4dp" />
 
             <TextView
@@ -122,7 +138,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="#FFFFFF"
-                android:layout_marginBottom="8dp"
                 android:text="Humidity: --%" />
 
             <TextView
@@ -131,7 +146,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="#FFFFFF"
-                android:layout_marginBottom="8dp"
                 android:text="Visibility: -- km" />
 
             <TextView
@@ -140,7 +154,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="#FFFFFF"
-                android:layout_marginBottom="8dp"
                 android:text="Wind Speed: -- m/s" />
 
             <TextView
@@ -149,18 +162,16 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="#FFFFFF"
-                android:layout_marginBottom="16dp"
                 android:text="Wind Degree: --°" />
 
-            <!-- Air Quality -->
+            <!-- Air Quality Index -->
             <TextView
                 android:id="@+id/tvAirQualityIndex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textColor="#FFFFFF"
-                android:text="Air Quality Index (AQI): --"
-                android:layout_marginBottom="8dp" />
+                android:text="Air Quality Index (AQI): --" />
 
             <!-- 5-Day Forecast -->
             <TextView
@@ -179,7 +190,11 @@
                 android:scrollbars="horizontal"
                 android:nestedScrollingEnabled="true" />
 
-            <com.github.mikephil.charting.charts.LineChart android:id="@+id/forecastChart" android:layout_width="match_parent" android:layout_height="300dp" android:layout_margin="16dp"/>
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/forecastChart"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="16dp"/>
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
