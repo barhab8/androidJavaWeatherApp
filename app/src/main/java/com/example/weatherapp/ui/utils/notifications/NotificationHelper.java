@@ -37,16 +37,16 @@ public class NotificationHelper {
         // Build notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification_weather)
-                .setContentTitle("Weather Reminder!")
+                .setContentTitle("Weather Update 🌤")
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
-        // Ensure unique notification ID to prevent overwrites
+        // Unique notification ID
         int notificationId = (int) System.currentTimeMillis();
         notificationManager.notify(notificationId, builder.build());
 
-        Log.d(TAG, "Notification displayed.");
+        Log.d(TAG, "Notification displayed: " + message);
     }
 }
