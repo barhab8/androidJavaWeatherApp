@@ -12,7 +12,6 @@ import androidx.core.view.WindowInsetsCompat;
 import android.view.View;
 import android.widget.Button;
 import com.example.weatherapp.R;
-import com.example.weatherapp.ui.utils.AlarmReceiver;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button btnMainRegister;

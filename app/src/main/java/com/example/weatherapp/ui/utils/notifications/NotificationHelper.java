@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.utils;
+package com.example.weatherapp.ui.utils.notifications;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,16 +13,15 @@ import com.example.weatherapp.R;
 import com.example.weatherapp.ui.activitys.MainScreenActivity;
 
 public class NotificationHelper {
-
     private static final String TAG = "notification";
     private static final String CHANNEL_ID = "WEATHER_CHANNEL";
 
-    public static void showWeatherNotification(Context context) {
+    public static void showWeatherNotification(Context context, String message) {
         Log.d(TAG, "Attempting to show notification...");
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Create a notification channel (required for Android 8+)
+        // Create Notification Channel
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID, "Weather Alerts", NotificationManager.IMPORTANCE_HIGH);
@@ -31,22 +30,23 @@ public class NotificationHelper {
             Log.d(TAG, "Notification channel created.");
         }
 
-        // Intent to open MainScreenActivity when notification is clicked
+        // Intent to open MainScreenActivity when clicked
         Intent intent = new Intent(context, MainScreenActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        // Build the notification
+        // Build notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification_weather) // Ensure you have an icon in the drawable folder
-                .setContentTitle("Check the Weather!")
-                .setContentText("Don't forget to check the weather today.")
+                .setSmallIcon(R.drawable.ic_notification_weather)
+                .setContentTitle("Weather Reminder!")
+                .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
-        // Show the notification
-        notificationManager.notify(1, builder.build());
+        // Ensure unique notification ID to prevent overwrites
+        int notificationId = (int) System.currentTimeMillis();
+        notificationManager.notify(notificationId, builder.build());
 
-        Log.d(TAG, "Notification should be displayed now.");
+        Log.d(TAG, "Notification displayed.");
     }
 }

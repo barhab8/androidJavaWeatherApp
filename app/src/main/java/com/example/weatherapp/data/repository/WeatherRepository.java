@@ -12,7 +12,7 @@ import java.util.List;
 import retrofit2.Call;
 
 public class WeatherRepository {
-    private static final String API_KEY = "79f8998e3f1ace6865e358a5e7916085";
+    private static final String API_KEY = "513a571468dce9fd66f6df3965ea4716";
     private static final String GEO_API_KEY = "79f8998e3f1ace6865e358a5e7916085";
 
 

@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.weatherapp.R;
-import com.example.weatherapp.ui.utils.AlarmReceiver;
+import com.example.weatherapp.ui.utils.notifications.NotificationScheduler;
 
 import java.util.Calendar;
 
@@ -104,37 +104,15 @@ public class SettingsActivity extends AppCompatActivity {
     private void setDailyNotification() {
         int hour = timePicker.getHour();
         int minute = timePicker.getMinute();
-
-        Log.d(TAG, "Setting daily notification at " + hour + ":" + minute);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
-
-        Log.d(TAG, "Daily notification scheduled successfully.");
+        NotificationScheduler.setDailyNotification(this, hour, minute);
         Toast.makeText(this, "Daily Notification Set!", Toast.LENGTH_SHORT).show();
     }
 
     private void cancelNotification() {
-        Log.d(TAG, "Cancelling notification...");
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        alarmManager.cancel(pendingIntent);
-
-        Log.d(TAG, "Notification canceled successfully.");
+        NotificationScheduler.cancelNotification(this);
         Toast.makeText(this, "Notification Canceled!", Toast.LENGTH_SHORT).show();
     }
+
 
     private int getUnitIndex(String unit) {
         switch (unit) {
