@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Material 3 Toolbar -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -13,10 +12,9 @@
         android:background="?attr/colorSurface"
         app:titleTextColor="?attr/colorOnSurface"
         android:elevation="4dp"
-        app:title="Settings Screen"
+        app:title="Settings"
         app:popupTheme="@style/ThemeOverlay.Material3.Light"/>
 
-    <!-- Scrollable Content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -29,8 +27,6 @@
             android:gravity="center_horizontal"
             android:paddingTop="50dp"
             android:paddingBottom="50dp">
-
-            <!-- Temperature Unit Label -->
             <TextView
                 android:id="@+id/tvSelectUnit"
                 android:layout_width="wrap_content"
@@ -38,7 +34,6 @@
                 android:text="Select Temperature Unit"
                 android:textSize="18sp"/>
 
-            <!-- Temperature Unit Spinner -->
             <Spinner
                 android:id="@+id/spinnerUnits"
                 android:layout_width="wrap_content"
@@ -46,7 +41,6 @@
                 android:entries="@array/unit_options"
                 android:layout_marginTop="20dp"/>
 
-            <!-- Map Provider Label -->
             <TextView
                 android:id="@+id/tvSelectMap"
                 android:layout_width="wrap_content"
@@ -55,7 +49,6 @@
                 android:textSize="18sp"
                 android:layout_marginTop="50dp"/>
 
-            <!-- Map Provider Spinner -->
             <Spinner
                 android:id="@+id/spinnerMaps"
                 android:layout_width="wrap_content"
@@ -63,7 +56,6 @@
                 android:entries="@array/map_providers"
                 android:layout_marginTop="20dp"/>
 
-            <!-- Theme Selection Label -->
             <TextView
                 android:id="@+id/tvSelectTheme"
                 android:layout_width="wrap_content"
@@ -72,7 +64,6 @@
                 android:textSize="18sp"
                 android:layout_marginTop="50dp"/>
 
-            <!-- Theme Selection Spinner -->
             <Spinner
                 android:id="@+id/spinnerTheme"
                 android:layout_width="wrap_content"
@@ -80,7 +71,6 @@
                 android:entries="@array/theme_options"
                 android:layout_marginTop="20dp"/>
 
-            <!-- Save Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
                 android:layout_width="wrap_content"
@@ -88,38 +78,13 @@
                 android:text="Save"
                 android:layout_marginTop="30dp"/>
 
-            <!-- Notification Time Picker Label -->
-            <TextView
-                android:id="@+id/tvNotificationTime"
-                android:layout_width="wrap_content"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNotificationSettings"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Select Notification Time"
-                android:textSize="18sp"
+                android:text="Notification Settings"
                 android:layout_marginTop="50dp"/>
 
-            <!-- Time Picker -->
-            <TimePicker
-                android:id="@+id/timePicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:timePickerMode="spinner"/>
-
-            <!-- Set Notification Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSetNotification"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Set Notification"
-                android:layout_marginTop="20dp"/>
-
-            <!-- Cancel Notification Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCancelNotification"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cancel Notification"
-                android:layout_marginTop="10dp"/>
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

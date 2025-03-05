@@ -1,8 +1,4 @@
 package com.example.weatherapp.ui.activitys;
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,23 +8,16 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TimePicker;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-
 import com.example.weatherapp.R;
-import com.example.weatherapp.ui.utils.notifications.NotificationScheduler;
-
-import java.util.Calendar;
-
 public class SettingsActivity extends AppCompatActivity {
 
     private static final String TAG = "notification"; // Log Tag
 
     private Spinner spinnerUnits, spinnerMaps, spinnerTheme;
-    private Button btnSave, btnSetNotification, btnCancelNotification;
+    private Button btnSave, btnNotificationSettings;
     private TimePicker timePicker;
 
     private static final String PREFS_NAME = "weather_prefs";
@@ -44,13 +33,16 @@ public class SettingsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Settings");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         spinnerUnits = findViewById(R.id.spinnerUnits);
         spinnerMaps = findViewById(R.id.spinnerMaps);
         spinnerTheme = findViewById(R.id.spinnerTheme);
         btnSave = findViewById(R.id.btnSave);
-        btnSetNotification = findViewById(R.id.btnSetNotification);
-        btnCancelNotification = findViewById(R.id.btnCancelNotification);
-        timePicker = findViewById(R.id.timePicker);
+        btnNotificationSettings = findViewById(R.id.btnNotificationSettings);
 
         // Load saved preferences
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -60,27 +52,17 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Handle save button click
         btnSave.setOnClickListener(v -> savePreferences());
-        btnSetNotification.setOnClickListener(v -> setDailyNotification());
-        btnCancelNotification.setOnClickListener(v -> cancelNotification());
+        btnNotificationSettings.setOnClickListener(v -> {
+            Intent intent = new Intent(SettingsActivity.this, NotificationSettingsActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.only_back_menu, menu);
+    public boolean onSupportNavigateUp() {
+        finish();
         return true;
     }
-
-    // Handle menu item selections from the top app bar
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.btnBack) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void savePreferences() {
         String selectedUnit = getUnitFromIndex(spinnerUnits.getSelectedItemPosition());
         String selectedMap = getMapFromIndex(spinnerMaps.getSelectedItemPosition());
@@ -101,17 +83,6 @@ public class SettingsActivity extends AppCompatActivity {
         finish();
     }
 
-    private void setDailyNotification() {
-        int hour = timePicker.getHour();
-        int minute = timePicker.getMinute();
-        NotificationScheduler.setDailyNotification(this, hour, minute);
-        Toast.makeText(this, "Daily Notification Set!", Toast.LENGTH_SHORT).show();
-    }
-
-    private void cancelNotification() {
-        NotificationScheduler.cancelNotification(this);
-        Toast.makeText(this, "Notification Canceled!", Toast.LENGTH_SHORT).show();
-    }
 
 
     private int getUnitIndex(String unit) {

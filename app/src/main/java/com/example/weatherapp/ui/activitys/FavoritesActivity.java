@@ -39,6 +39,11 @@ public class FavoritesActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Favorites Screen");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         rvFavorites = findViewById(R.id.rvFavorites);
         progressBar = findViewById(R.id.progressBar);
         firestoreHelper = new FirestoreHelper(this);
@@ -61,22 +66,10 @@ public class FavoritesActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.only_back_menu, menu);
+    public boolean onSupportNavigateUp() {
+        finish();
         return true;
     }
-
-    // Handle menu item selections from the top app bar
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.btnBack) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void loadFavorites() {
         progressBar.setVisibility(View.VISIBLE);
         firestoreHelper.loadFavoriteCities(favoriteCities -> {
