@@ -1,90 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorSurface"
-        app:titleTextColor="?attr/colorOnSurface"
-        android:elevation="4dp"
-        app:title="Settings"
-        app:popupTheme="@style/ThemeOverlay.Material3.Light"/>
+        android:layout_height="wrap_content"/>
 
-    <ScrollView
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/main"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:paddingTop="50dp"
-            android:paddingBottom="50dp">
-            <TextView
-                android:id="@+id/tvSelectUnit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select Temperature Unit"
-                android:textSize="18sp"/>
-
-            <Spinner
-                android:id="@+id/spinnerUnits"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/unit_options"
-                android:layout_marginTop="20dp"/>
-
-            <TextView
-                android:id="@+id/tvSelectMap"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select Map Provider"
-                android:textSize="18sp"
-                android:layout_marginTop="50dp"/>
-
-            <Spinner
-                android:id="@+id/spinnerMaps"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/map_providers"
-                android:layout_marginTop="20dp"/>
-
-            <TextView
-                android:id="@+id/tvSelectTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select Theme"
-                android:textSize="18sp"
-                android:layout_marginTop="50dp"/>
-
-            <Spinner
-                android:id="@+id/spinnerTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/theme_options"
-                android:layout_marginTop="20dp"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Save"
-                android:layout_marginTop="30dp"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnNotificationSettings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Notification Settings"
-                android:layout_marginTop="50dp"/>
-
-        </LinearLayout>
-    </ScrollView>
+        android:layout_height="match_parent"/>
 </LinearLayout>
