@@ -85,7 +85,7 @@ public class AuthActivity extends AppCompatActivity {
                             firestore.collection("users").document(userId).set(userData)
                                     .addOnSuccessListener(unused -> {
                                         Toast.makeText(AuthActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(AuthActivity.this, MainActivity.class));
+                                        startActivity(new Intent(AuthActivity.this, MainScreenActivity.class));
                                         finish();
                                     })
                                     .addOnFailureListener(e ->
@@ -103,7 +103,7 @@ public class AuthActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(AuthActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(AuthActivity.this, MainActivity.class));
+                        startActivity(new Intent(AuthActivity.this, MainScreenActivity.class));
                         finish();
                     } else {
                         Toast.makeText(AuthActivity.this, "Login Failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
