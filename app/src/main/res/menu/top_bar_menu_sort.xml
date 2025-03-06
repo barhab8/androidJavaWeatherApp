@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/sort_name_asc" android:title="Sort by Name (A-Z)"/>
+    <item android:id="@+id/sort_name_desc" android:title="Sort by Name (Z-A)"/>
+    <item android:id="@+id/sort_temp_asc" android:title="Sort by Temperature (Low-High)"/>
+    <item android:id="@+id/sort_temp_desc" android:title="Sort by Temperature (High-Low)"/>
+</menu>

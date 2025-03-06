@@ -47,8 +47,6 @@ public class FavoritesActivity extends AppCompatActivity {
         firestoreHelper = new FirestoreHelper(this);
         weatherRepository = new WeatherRepository(getBaseContext());
 
-        // Load unit preference from SharedPreferences
-        SharedPreferences prefs = getSharedPreferences("weather_prefs", Context.MODE_PRIVATE);
         rvFavorites.setLayoutManager(new LinearLayoutManager(this));
         favoritesAdapter = new FavoritesAdapter(this, city -> {
             Intent intent = new Intent();
@@ -100,5 +98,32 @@ public class FavoritesActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.top_bar_menu_sort, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.sort_name_asc) {
+            favoritesAdapter.sortByName(true);
+            return true;
+        } else if (id == R.id.sort_name_desc) {
+            favoritesAdapter.sortByName(false);
+            return true;
+        } else if (id == R.id.sort_temp_asc) {
+            favoritesAdapter.sortByTemperature(true);
+            return true;
+        } else if (id == R.id.sort_temp_desc) {
+            favoritesAdapter.sortByTemperature(false);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

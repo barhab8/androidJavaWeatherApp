@@ -8,6 +8,7 @@
     <!-- Material 3 Toolbar -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        app:menu="@menu/top_bar_menu_sort"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorSurface"

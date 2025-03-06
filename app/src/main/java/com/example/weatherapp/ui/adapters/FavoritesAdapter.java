@@ -7,10 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.weatherapp.R;
 import com.squareup.picasso.Picasso;
+
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,13 +57,41 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
     }
 
     public void updateCityTemperature(String city, String temperature) {
-        // The temperature value should already be a string (e.g., "20")—we add the unit symbol here.
         cityTemperatures.put(city, temperature + unitSymbol);
         notifyDataSetChanged();
     }
 
     public void updateCityIcon(String city, String iconUrl) {
         cityIcons.put(city, iconUrl);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Sort cities alphabetically (A-Z or Z-A)
+     */
+    public void sortByName(boolean ascending) {
+        if (cities == null) return;
+
+        Collections.sort(cities, ascending ? String::compareTo : Collections.reverseOrder(String::compareTo));
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Sort cities by temperature (ascending or descending)
+     */
+    public void sortByTemperature(boolean ascending) {
+        if (cities == null) return;
+
+        Collections.sort(cities, (city1, city2) -> {
+            String temp1 = cityTemperatures.getOrDefault(city1, "N/A").replace(unitSymbol, "").trim();
+            String temp2 = cityTemperatures.getOrDefault(city2, "N/A").replace(unitSymbol, "").trim();
+
+            double t1 = temp1.equals("N/A") ? Double.MAX_VALUE : Double.parseDouble(temp1);
+            double t2 = temp2.equals("N/A") ? Double.MAX_VALUE : Double.parseDouble(temp2);
+
+            return ascending ? Double.compare(t1, t2) : Double.compare(t2, t1);
+        });
+
         notifyDataSetChanged();
     }
 
