@@ -62,8 +62,13 @@ public class SystemSettingsFragment extends Fragment {
         editor.putString(THEME_KEY, selectedTheme);
         editor.apply();
 
+        // Apply theme change
         applyTheme(selectedTheme);
+
+        // Notify WeatherFragment to refresh data
+        requireActivity().getSupportFragmentManager().setFragmentResult("unit_changed", new Bundle());
     }
+
 
     private int getUnitIndex(String unit) {
         switch (unit) {

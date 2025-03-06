@@ -30,8 +30,6 @@ public class FavoritesActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private FirestoreHelper firestoreHelper;
     private WeatherRepository weatherRepository;
-    private String unit;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,12 +45,10 @@ public class FavoritesActivity extends AppCompatActivity {
         rvFavorites = findViewById(R.id.rvFavorites);
         progressBar = findViewById(R.id.progressBar);
         firestoreHelper = new FirestoreHelper(this);
-        weatherRepository = new WeatherRepository();
+        weatherRepository = new WeatherRepository(getBaseContext());
 
         // Load unit preference from SharedPreferences
         SharedPreferences prefs = getSharedPreferences("weather_prefs", Context.MODE_PRIVATE);
-        unit = prefs.getString("unit", "metric");
-
         rvFavorites.setLayoutManager(new LinearLayoutManager(this));
         favoritesAdapter = new FavoritesAdapter(this, city -> {
             Intent intent = new Intent();
@@ -85,7 +81,7 @@ public class FavoritesActivity extends AppCompatActivity {
     }
 
     private void fetchTemperature(String city) {
-        weatherRepository.fetchWeatherByCity(city, unit).enqueue(new Callback<WeatherResponse>() {
+        weatherRepository.fetchWeatherByCity(city).enqueue(new Callback<WeatherResponse>() {
             @Override
             public void onResponse(@NonNull Call<WeatherResponse> call, @NonNull Response<WeatherResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {

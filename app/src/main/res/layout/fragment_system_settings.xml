@@ -12,7 +12,7 @@
         android:background="?attr/colorSurface"
         app:titleTextColor="?attr/colorOnSurface"
         android:elevation="4dp"
-        app:title="Settings"
+        app:title="System Settings"
         app:popupTheme="@style/ThemeOverlay.Material3.Light"/>
 
     <ScrollView

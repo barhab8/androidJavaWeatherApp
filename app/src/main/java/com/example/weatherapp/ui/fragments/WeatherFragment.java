@@ -94,6 +94,13 @@ public class WeatherFragment extends Fragment {
         initializeUI(view);
         initializeDependencies();
         firestoreHelper = new FirestoreHelper(requireContext());
+        // Listen for unit change updates from SystemSettingsFragment
+        requireActivity().getSupportFragmentManager().setFragmentResultListener("unit_changed", this, (requestKey, result) -> {
+            SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            UNIT = prefs.getString(UNIT_KEY, "metric"); // Update unit
+            weatherRepository.setUnit(requireContext(), UNIT);
+            refreshWeatherData(); // Refresh weather based on new unit
+        });
         // Handle location-based weather fetching
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fetchWeatherByLocation();
@@ -158,7 +165,7 @@ public class WeatherFragment extends Fragment {
 
     private void initializeDependencies() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
-        weatherRepository = new WeatherRepository();
+        weatherRepository = new WeatherRepository(getContext());
         forecastProcessor = new ForecastProcessor();
     }
 
@@ -167,10 +174,25 @@ public class WeatherFragment extends Fragment {
         super.onResume();
         SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         String newUnit = prefs.getString(UNIT_KEY, "metric");
-        if (!newUnit.equals(UNIT)) { // Only update if unit changed
+
+        if (!newUnit.equals(UNIT)) { // If unit changed, update and refresh data
             UNIT = newUnit;
+            weatherRepository.setUnit(requireContext(), newUnit); // Update the repository
+            refreshWeatherData(); // Fetch data again with new unit
         }
     }
+
+    // Method to refresh weather data based on the last searched city or location
+    private void refreshWeatherData() {
+        String lastCity = tvWeatherLocation.getText().toString().trim();
+
+        if (!lastCity.isEmpty()) {
+            fetchWeatherDataByCity(lastCity);
+        } else {
+            fetchWeatherByLocation(); // If no city is set, fetch by location
+        }
+    }
+
 
     // Modified method for location-based weather fetching using lat/lon
     private void fetchWeatherByLocation() {
@@ -190,7 +212,7 @@ public class WeatherFragment extends Fragment {
     // 1 - City-based API calls grouped together
     public void fetchWeatherDataByCity(String city) {
         // Fetch weather data by city
-        weatherRepository.fetchWeatherByCity(city, UNIT).enqueue(new Callback<WeatherResponse>() {
+        weatherRepository.fetchWeatherByCity(city).enqueue(new Callback<WeatherResponse>() {
             @Override
             public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -205,7 +227,7 @@ public class WeatherFragment extends Fragment {
             }
         });
         // Fetch 5-day forecast by city
-        weatherRepository.fetch5DayForecast(city, UNIT).enqueue(new Callback<ForecastResponse>() {
+        weatherRepository.fetch5DayForecast(city).enqueue(new Callback<ForecastResponse>() {
             @Override
             public void onResponse(Call<ForecastResponse> call, Response<ForecastResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -257,7 +279,7 @@ public class WeatherFragment extends Fragment {
     // 2 - Latitude/Longitude-based API calls grouped together
     private void fetchWeatherDataByCoordinates(double latitude, double longitude) {
         // Fetch weather data by coordinates
-        weatherRepository.fetchWeatherByCoordinates(latitude, longitude, UNIT).enqueue(new Callback<WeatherResponse>() {
+        weatherRepository.fetchWeatherByCoordinates(latitude, longitude).enqueue(new Callback<WeatherResponse>() {
             @Override
             public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
