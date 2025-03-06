@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -62,13 +64,9 @@ public class SystemSettingsFragment extends Fragment {
         editor.putString(THEME_KEY, selectedTheme);
         editor.apply();
 
-        // Apply theme change
         applyTheme(selectedTheme);
-
-        // Notify WeatherFragment to refresh data
-        requireActivity().getSupportFragmentManager().setFragmentResult("unit_changed", new Bundle());
+        Toast.makeText(requireContext(), "Saved units: " + selectedUnit + " ,saved map: " + selectedMap + " ,saved theme: " + selectedTheme , Toast.LENGTH_LONG).show();
     }
-
 
     private int getUnitIndex(String unit) {
         switch (unit) {

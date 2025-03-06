@@ -21,9 +21,6 @@
         android:theme="@style/Theme.WeatherApp"
         tools:targetApi="31">
         <activity
-            android:name=".ui.fragments.NotificationSettingsActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.activitys.AuthActivity"
             android:exported="false" />
         <activity

@@ -3,46 +3,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorSurface"
-        app:titleTextColor="?attr/colorOnSurface"
-        android:elevation="4dp"
-        app:title="Notification Settings"
-        app:popupTheme="@style/ThemeOverlay.Material3.Light"/>
-<LinearLayout
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:paddingTop="50dp"
-    android:paddingBottom="50dp">
-
-
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:timePickerMode="spinner"
-        android:layout_marginTop="50dp"/>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSetNotification"
+    android:padding="16dp"
+    android:background="?attr/colorSurface">
+    <!-- Main Content -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Set Notification"
-        android:layout_marginTop="20dp"/>
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="32dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnCancelNotification"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cancel Notification"
-        android:layout_marginTop="10dp"/>
-</LinearLayout>
+        <TextView
+            android:id="@+id/tvNotificationInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set a daily notification time"
+            android:textSize="18sp"
+            android:textColor="?attr/colorOnSurface"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Material TimePicker -->
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner"/>
+
+        <!-- Buttons -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSetNotification"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set Notification"
+            android:layout_marginTop="24dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelNotification"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cancel Notification"
+            android:layout_marginTop="12dp"/>
+    </LinearLayout>
+
 </LinearLayout>

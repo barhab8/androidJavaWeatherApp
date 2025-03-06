@@ -4,17 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorSurface"
-        app:titleTextColor="?attr/colorOnSurface"
-        android:elevation="4dp"
-        app:title="System Settings"
-        app:popupTheme="@style/ThemeOverlay.Material3.Light"/>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
