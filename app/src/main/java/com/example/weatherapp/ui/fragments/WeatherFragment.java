@@ -101,6 +101,7 @@ public class WeatherFragment extends Fragment {
             weatherRepository.setUnit(requireContext(), UNIT);
             refreshWeatherData(); // Refresh weather based on new unit
         });
+
         // Handle location-based weather fetching
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fetchWeatherByLocation();
@@ -112,7 +113,7 @@ public class WeatherFragment extends Fragment {
         btnSearch.setOnClickListener(v -> {
             String city = etCityName.getText().toString().trim();
             if (!city.isEmpty()) {
-                fetchWeatherDataByCity(city);
+                fetchWeatherDataByCity(city, true);
             } else {
                 showToast("Please enter a city name.");
             }
@@ -187,7 +188,7 @@ public class WeatherFragment extends Fragment {
         String lastCity = tvWeatherLocation.getText().toString().trim();
 
         if (!lastCity.isEmpty()) {
-            fetchWeatherDataByCity(lastCity);
+            fetchWeatherDataByCity(lastCity, false);
         } else {
             fetchWeatherByLocation(); // If no city is set, fetch by location
         }
@@ -210,7 +211,7 @@ public class WeatherFragment extends Fragment {
     }
 
     // 1 - City-based API calls grouped together
-    public void fetchWeatherDataByCity(String city) {
+    public void fetchWeatherDataByCity(String city, boolean toast) {
         // Fetch weather data by city
         weatherRepository.fetchWeatherByCity(city).enqueue(new Callback<WeatherResponse>() {
             @Override
@@ -218,7 +219,9 @@ public class WeatherFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     updateWeatherUI(response.body());
                 } else {
-                    showToast("City not found.");
+                    if(toast) {
+                        showToast("City not found.");
+                    }
                 }
             }
             @Override
@@ -235,7 +238,10 @@ public class WeatherFragment extends Fragment {
                     forecastAdapter.setForecastList(forecastProcessor.getDailyForecast(forecastList));
                     ChartHelper.populateForecastChart(forecastChart, forecastList);
                 } else {
-                    showToast("Failed to fetch forecast.");
+                    if(toast) {
+                        showToast("Failed to fetch forecast.");
+                    }
+
                 }
             }
             @Override
@@ -257,7 +263,10 @@ public class WeatherFragment extends Fragment {
                             if (response.isSuccessful() && response.body() != null) {
                                 UIHelper.updateAirQualityUI(response.body(), tvAirQualityIndex);
                             } else {
-                                showToast("Failed to fetch air quality data.");
+                                if(toast) {
+                                    showToast("Failed to fetch air quality data.");
+                                }
+
                             }
                         }
                         @Override
@@ -266,7 +275,10 @@ public class WeatherFragment extends Fragment {
                         }
                     });
                 } else {
-                    showToast("City not found.");
+                    if(toast) {
+                        showToast("City not found.");
+                    }
+
                 }
             }
             @Override

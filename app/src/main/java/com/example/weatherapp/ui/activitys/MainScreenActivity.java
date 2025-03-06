@@ -94,7 +94,7 @@ public class MainScreenActivity extends AppCompatActivity {
                 // Check if the current fragment is a WeatherFragment and update it.
                 Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                 if (currentFragment instanceof WeatherFragment) {
-                    ((WeatherFragment) currentFragment).fetchWeatherDataByCity(selectedCity);
+                    ((WeatherFragment) currentFragment).fetchWeatherDataByCity(selectedCity, false);
                 } else {
                     // Otherwise, load a new WeatherFragment with the selected city.
                     WeatherFragment weatherFragment = new WeatherFragment();
