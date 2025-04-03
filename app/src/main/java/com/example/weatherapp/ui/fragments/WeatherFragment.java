@@ -45,8 +45,8 @@ import retrofit2.Response;
 public class WeatherFragment extends Fragment {
 
     // Constants
-    private static String UNIT = "metric";
-    private static final String ICON_URL_TEMPLATE = "https://openweathermap.org/img/wn/%s@2x.png";
+    public static String UNIT = "metric";
+    public static final String ICON_URL_TEMPLATE = "https://openweathermap.org/img/wn/%s@2x.png";
 
     // UI Elements
     private android.widget.EditText etCityName;

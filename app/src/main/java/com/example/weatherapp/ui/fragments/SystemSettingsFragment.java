@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.fragments;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import com.example.weatherapp.R;
+import com.example.weatherapp.ui.widget.WeatherWidgetProvider;
 
 public class SystemSettingsFragment extends Fragment {
 
@@ -63,6 +65,11 @@ public class SystemSettingsFragment extends Fragment {
         editor.putString(MAP_KEY, selectedMap);
         editor.putString(THEME_KEY, selectedTheme);
         editor.apply();
+
+
+        Intent intent = new Intent(requireContext(), WeatherWidgetProvider.class);
+        intent.setAction(WeatherWidgetProvider.ACTION_UPDATE_WIDGET);
+        requireContext().sendBroadcast(intent);
 
         applyTheme(selectedTheme);
         Toast.makeText(requireContext(), "Saved units: " + selectedUnit + " ,saved map: " + selectedMap + " ,saved theme: " + selectedTheme , Toast.LENGTH_LONG).show();
