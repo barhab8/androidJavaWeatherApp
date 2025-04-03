@@ -35,6 +35,7 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
+            setWidgetClickListener(context, appWidgetManager, appWidgetId);
             getUserLocationAndUpdateWidget(context, appWidgetManager, appWidgetId);
         }
     }
@@ -63,7 +64,7 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
                     double longitude = location.getLongitude();
                     updateWidget(context, appWidgetManager, appWidgetId, latitude, longitude);
                 } else {
-                    updateWidget(context, appWidgetManager, appWidgetId, 32.0753, 34.8086); // default to givatayim
+                    updateWidget(context, appWidgetManager, appWidgetId, 32.0753, 34.8086); // Default to Givatayim
                 }
             }).addOnFailureListener(e -> updateWidgetWithError(context, appWidgetManager, appWidgetId, "Location Unavailable"));
         } else {
@@ -99,9 +100,7 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
 
                     views.setTextViewText(R.id.widget_city, weather.getCity());
                     views.setTextViewText(R.id.widget_temperature, temperature);
-                    views.setImageViewResource(R.id.widget_icon, R.drawable.ic_star_filled);
                     appWidgetManager.updateAppWidget(appWidgetId, views);
-
 
                     String iconUrl = String.format(ICON_URL_TEMPLATE, weather.getWeather()[0].getIcon());
 
@@ -122,8 +121,6 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
                         appWidgetManager.updateAppWidget(appWidgetId, views);
                         Log.d("WidgetScreen", "Widget updated for widget id " + appWidgetId);
                     }).start();
-
-
                 } else {
                     updateWidgetWithError(context, appWidgetManager, appWidgetId, "Weather Error");
                 }
@@ -138,16 +135,20 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
     }
 
     private void updateWidgetWithError(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String errorMessage) {
-        Intent intent = new Intent(context, MainScreenActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_MUTABLE);
-
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_weather);
-        views.setOnClickPendingIntent(R.id.widget_weather, pendingIntent);
         views.setTextViewText(R.id.widget_city, errorMessage);
         views.setTextViewText(R.id.widget_temperature, "--");
-
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
+    private void setWidgetClickListener(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        Intent intent = new Intent(context, MainScreenActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_weather);
+        views.setOnClickPendingIntent(R.id.widget_weather, pendingIntent);
+
+        appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
 }
