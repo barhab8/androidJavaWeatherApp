@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.widget;
 
+import static com.example.weatherapp.ui.fragments.WeatherFragment.ICON_URL_TEMPLATE;
 import static com.example.weatherapp.ui.fragments.WeatherFragment.UNIT;
 
 import android.Manifest;
@@ -10,6 +11,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.core.content.ContextCompat;
@@ -20,6 +23,7 @@ import com.example.weatherapp.data.repository.WeatherRepository;
 import com.example.weatherapp.ui.activitys.MainScreenActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,7 +63,7 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
                     double longitude = location.getLongitude();
                     updateWidget(context, appWidgetManager, appWidgetId, latitude, longitude);
                 } else {
-                    updateWidgetWithError(context, appWidgetManager, appWidgetId, "Location Error");
+                    updateWidget(context, appWidgetManager, appWidgetId, 32.0753, 34.8086); // default to givatayim
                 }
             }).addOnFailureListener(e -> updateWidgetWithError(context, appWidgetManager, appWidgetId, "Location Unavailable"));
         } else {
@@ -95,6 +99,31 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
 
                     views.setTextViewText(R.id.widget_city, weather.getCity());
                     views.setTextViewText(R.id.widget_temperature, temperature);
+                    views.setImageViewResource(R.id.widget_icon, R.drawable.ic_star_filled);
+                    appWidgetManager.updateAppWidget(appWidgetId, views);
+
+
+                    String iconUrl = String.format(ICON_URL_TEMPLATE, weather.getWeather()[0].getIcon());
+
+                    // Load the icon Bitmap on a background thread
+                    new Thread(() -> {
+                        Log.d("WidgetScreen", "Loading icon from URL: " + iconUrl);
+                        try {
+                            Bitmap bitmap = Picasso.get().load(iconUrl).get();
+                            if (bitmap != null) {
+                                Log.d("WidgetScreen", "Bitmap loaded successfully.");
+                                views.setImageViewBitmap(R.id.widget_icon, bitmap);
+                            } else {
+                                Log.e("WidgetScreen", "Bitmap is null");
+                            }
+                        } catch (Exception e) {
+                            Log.e("WidgetScreen", "Error loading image: " + e.getMessage());
+                        }
+                        appWidgetManager.updateAppWidget(appWidgetId, views);
+                        Log.d("WidgetScreen", "Widget updated for widget id " + appWidgetId);
+                    }).start();
+
+
                 } else {
                     updateWidgetWithError(context, appWidgetManager, appWidgetId, "Weather Error");
                 }
@@ -110,11 +139,15 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
 
     private void updateWidgetWithError(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String errorMessage) {
         Intent intent = new Intent(context, MainScreenActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_MUTABLE);
+
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_weather);
         views.setOnClickPendingIntent(R.id.widget_weather, pendingIntent);
         views.setTextViewText(R.id.widget_city, errorMessage);
         views.setTextViewText(R.id.widget_temperature, "--");
+
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
+
 }
