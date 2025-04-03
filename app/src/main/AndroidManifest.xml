@@ -66,7 +66,7 @@
 
 
 
-        <receiver android:name=".ui.widget.WeatherWidgetProvider"
+        <receiver android:name=".ui.utils.widget.WeatherWidgetProvider"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -76,14 +76,14 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
-        <receiver android:name=".ui.widget.WidgetUpdateService"
+        <receiver android:name=".ui.utils.widget.WidgetUpdateService"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".ui.widget.WidgetBootReceiver"
+        <receiver android:name=".ui.utils.widget.WidgetBootReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

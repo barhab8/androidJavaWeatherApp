@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.widget;
+package com.example.weatherapp.ui.utils.widget;
 
 import static com.example.weatherapp.ui.fragments.WeatherFragment.ICON_URL_TEMPLATE;
 import static com.example.weatherapp.ui.fragments.WeatherFragment.UNIT;

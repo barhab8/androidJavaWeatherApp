@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import com.example.weatherapp.R;
-import com.example.weatherapp.ui.widget.WeatherWidgetProvider;
+import com.example.weatherapp.ui.utils.widget.WeatherWidgetProvider;
 
 public class SystemSettingsFragment extends Fragment {
 

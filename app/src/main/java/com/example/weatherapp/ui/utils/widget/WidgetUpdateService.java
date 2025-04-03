@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.widget;
+package com.example.weatherapp.ui.utils.widget;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

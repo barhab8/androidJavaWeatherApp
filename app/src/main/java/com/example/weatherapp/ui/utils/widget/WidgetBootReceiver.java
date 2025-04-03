@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.widget;
+package com.example.weatherapp.ui.utils.widget;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

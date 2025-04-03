@@ -1,38 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/widget_weather"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
+    android:padding="12dp"
     android:background="@drawable/widget_background"
-    android:clickable="true"
-    android:focusable="true"
-    android:id="@+id/widget_weather">
+    android:orientation="vertical">
 
+    <!-- Weather Icon -->
+    <ImageView
+        android:id="@+id/widget_icon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_centerHorizontal="true"
+        android:scaleType="fitCenter" />
+
+    <!-- City Name -->
     <TextView
         android:id="@+id/widget_city"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="City"
+        android:layout_below="@id/widget_icon"
+        android:layout_centerHorizontal="true"
+        android:text="City Name"
         android:textSize="18sp"
         android:textColor="@android:color/white"
-        android:layout_centerHorizontal="true"/>
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-medium"
+        android:paddingTop="8dp"/>
 
+    <!-- Temperature -->
     <TextView
         android:id="@+id/widget_temperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="--°C"
-        android:textSize="32sp"
-        android:textColor="@android:color/white"
         android:layout_below="@id/widget_city"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"/>
+        android:text="--°C"
+        android:textSize="24sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif"
+        android:paddingTop="4dp"/>
 
-    <ImageView
-        android:id="@+id/widget_icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/widget_temperature"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp" />
 </RelativeLayout>
