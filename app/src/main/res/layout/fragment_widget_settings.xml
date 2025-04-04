@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="?android:attr/colorBackground">
 
-    <EditText
-        android:id="@+id/cityEditText"
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter city name"
-        android:inputType="text" />
+        android:hint="Widget Location">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/cityEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Current Location: Not Set"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:padding="8dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/saveButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Location" />
+        android:text="save"
+        android:theme="?attr/materialButtonStyle"
+        app:cornerRadius="8dp"
+        android:layout_gravity="center" />
+
 </LinearLayout>

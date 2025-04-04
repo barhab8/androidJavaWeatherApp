@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:gravity="center"
-        android:textColor="#FF000000"
+        android:textColor="#FFFFFF"
         android:layout_marginBottom="4dp"
         android:textStyle="bold" />
 
@@ -34,7 +34,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:textColor="#FF000000"
+        android:textColor="#FFFFFF"
         android:layout_marginBottom="4dp" />
 
     <!-- Weather Description -->

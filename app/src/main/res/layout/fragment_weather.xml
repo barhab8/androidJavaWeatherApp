@@ -4,21 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <!-- Dynamic Background Image -->
     <ImageView
         android:id="@+id/backgroundImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
-
-    <!-- Semi-Transparent Dark Overlay for better text visibility -->
     <View
         android:id="@+id/darkOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#66000000"/>  <!-- 40% Black Transparency -->
-
+        android:background="#66000000"/>
     <!-- Scrollable Content -->
     <ScrollView
         android:layout_width="match_parent"
