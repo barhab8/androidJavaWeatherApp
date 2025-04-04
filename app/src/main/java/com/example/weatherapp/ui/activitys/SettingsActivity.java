@@ -44,6 +44,8 @@ public class SettingsActivity extends AppCompatActivity {
                 case 2:
                     tab.setText("System");
                     break;
+                case 3:
+                    tab.setText("Widget");
             }
         }).attach();
     }

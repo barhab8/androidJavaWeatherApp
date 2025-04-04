@@ -10,6 +10,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -18,12 +19,15 @@ import android.widget.RemoteViews;
 import androidx.core.content.ContextCompat;
 
 import com.example.weatherapp.R;
+import com.example.weatherapp.data.model.GeocodingResponse;
 import com.example.weatherapp.data.model.WeatherResponse;
 import com.example.weatherapp.data.repository.WeatherRepository;
 import com.example.weatherapp.ui.activitys.MainScreenActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,6 +60,16 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
     }
 
     private void getUserLocationAndUpdateWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        SharedPreferences prefs = context.getSharedPreferences("WidgetPrefs", Context.MODE_PRIVATE);
+        String city = prefs.getString("city", "");
+        if (!city.isEmpty()) {
+            fetchWeatherByCity(context, appWidgetManager, appWidgetId, city);
+        } else {
+            getLocationAndFetchWeather(context, appWidgetManager, appWidgetId);
+        }
+    }
+
+    private void getLocationAndFetchWeather(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
@@ -70,6 +84,32 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
         } else {
             updateWidgetWithError(context, appWidgetManager, appWidgetId, "Permission Needed");
         }
+    }
+
+    private void fetchWeatherByCity(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String city) {
+        WeatherRepository weatherRepo = new WeatherRepository(context);
+
+        // Fetch coordinates from city name
+        weatherRepo.getCoordinatesByCity(city).enqueue(new Callback<List<GeocodingResponse>>() {
+            @Override
+            public void onResponse(Call<List<GeocodingResponse>> call, Response<List<GeocodingResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    GeocodingResponse geoData = response.body().get(0); // Take the first result
+                    double latitude = geoData.getLatitude();
+                    double longitude = geoData.getLongitude();
+
+                    // Now fetch weather using coordinates
+                    updateWidget(context, appWidgetManager, appWidgetId, latitude, longitude);
+                } else {
+                    updateWidgetWithError(context, appWidgetManager, appWidgetId, "Location Not Found");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<GeocodingResponse>> call, Throwable t) {
+                updateWidgetWithError(context, appWidgetManager, appWidgetId, "API Error");
+            }
+        });
     }
 
     private void updateWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, double latitude, double longitude) {
