@@ -2,65 +2,84 @@ package com.example.weatherapp.ui.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.weatherapp.R;
+import com.example.weatherapp.data.model.PostModel;
+import com.example.weatherapp.ui.adapters.PostsAdapter;
+import com.example.weatherapp.ui.utils.FirebaseUtils;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SocialFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class SocialFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private EditText editTextPost;
+    private Button buttonPost;
+    private RecyclerView recyclerViewPosts;
+    private PostsAdapter adapter;
+    private List<PostModel> postList = new ArrayList<>();
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
 
-    public SocialFragment() {
-        // Required empty public constructor
+        View root = inflater.inflate(R.layout.fragment_social, container, false);
+
+        editTextPost = root.findViewById(R.id.editTextPost);
+        buttonPost = root.findViewById(R.id.buttonPost);
+        recyclerViewPosts = root.findViewById(R.id.recyclerViewPosts);
+
+        recyclerViewPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new PostsAdapter(postList);
+        recyclerViewPosts.setAdapter(adapter);
+
+        buttonPost.setOnClickListener(v -> {
+            String text = editTextPost.getText().toString().trim();
+            if (!text.isEmpty()) {
+                // Default values — can be enhanced with GPS or API!
+                String locationName = "Unknown Location";
+                String weather = "Unknown Weather";
+
+                FirebaseUtils.submitWeatherPost(
+                        getContext(),
+                        text,
+                        locationName,
+                        weather,
+                        () -> {
+                            editTextPost.setText(""); // Clear after posting
+                            loadPosts(); // Refresh list
+                        },
+                        () -> {
+                            // Error handled in FirebaseUtils via Toast
+                        }
+                );
+            }
+        });
+
+        loadPosts();
+
+        return root;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment socialFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SocialFragment newInstance(String param1, String param2) {
-        SocialFragment fragment = new SocialFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    private void loadPosts() {
+        try {
+            FirebaseUtils.loadWeatherPosts(getContext(), posts -> {
+                postList.clear();
+                postList.addAll(posts);
+                adapter.notifyDataSetChanged();
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_social, container, false);
-    }
 }

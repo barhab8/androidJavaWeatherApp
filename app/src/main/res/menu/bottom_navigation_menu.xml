@@ -5,8 +5,8 @@
         android:title="Weather" />
     <item
         android:id="@+id/nav_user_details"
-        android:icon="@drawable/ic_user"
-        android:title="User Details" />
+        android:icon="@drawable/ic_social"
+        android:title="Social" />
     <item
         android:id="@+id/map"
         android:icon="@drawable/ic_map_icon"

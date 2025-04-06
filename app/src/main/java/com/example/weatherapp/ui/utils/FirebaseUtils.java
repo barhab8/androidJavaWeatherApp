@@ -3,6 +3,7 @@ package com.example.weatherapp.ui.utils;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.example.weatherapp.data.model.PostModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import android.util.Log;
 
 public class FirebaseUtils {
 
@@ -142,4 +145,81 @@ public class FirebaseUtils {
     private static void showToast(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public static void submitWeatherPost(Context context, String text, String locationName, String weather, Runnable onSuccess, Runnable onFailure) {
+        FirebaseUser user = getCurrentUser();
+        if (user == null) {
+            showToast(context, "You must be logged in.");
+            onFailure.run();
+            return;
+        }
+
+        String userId = user.getUid();
+
+        getFirestore().collection("users").document(userId).get()
+                .addOnSuccessListener(document -> {
+                    String userName = document.getString("firstName");
+                    if (userName == null) userName = "Unknown";
+
+                    Map<String, Object> postData = new HashMap<>();
+                    postData.put("userId", userId);
+                    postData.put("userName", userName);
+                    postData.put("locationName", locationName);
+                    postData.put("weather", weather);
+                    postData.put("text", text);
+                    postData.put("timestamp", com.google.firebase.Timestamp.now());
+
+                    getFirestore().collection("weather_posts")
+                            .add(postData)
+                            .addOnSuccessListener(unused -> {
+                                showToast(context, "Post submitted!");
+                                onSuccess.run();
+                            })
+                            .addOnFailureListener(e -> {
+                                showToast(context, "Failed to submit post: " + e.getMessage());
+                                onFailure.run();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    showToast(context, "Failed to fetch user info: " + e.getMessage());
+                    onFailure.run();
+                });
+    }
+
+    public interface WeatherPostsCallback {
+        void onSuccess(List<PostModel> posts);
+    }
+
+    public static void loadWeatherPosts(Context context, WeatherPostsCallback callback) {
+        if (context == null) return;
+        getFirestore().collection("weather_posts")
+                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<PostModel> posts = new ArrayList<>();
+                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                        PostModel post = doc.toObject(PostModel.class);
+                        posts.add(post);
+                    }
+                    callback.onSuccess(posts);
+                })
+                .addOnFailureListener(e -> {
+                    showToast(context, "Failed to load posts: " + e.getMessage());
+                });
+    }
+
+
+
 }

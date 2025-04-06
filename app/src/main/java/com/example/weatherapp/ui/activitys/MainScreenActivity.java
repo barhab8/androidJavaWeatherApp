@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.ui.fragments.MapFragment;
+import com.example.weatherapp.ui.fragments.SocialFragment;
 import com.example.weatherapp.ui.fragments.UserDetailsFragment;
 import com.example.weatherapp.ui.fragments.WeatherFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -41,7 +42,7 @@ public class MainScreenActivity extends AppCompatActivity {
             if (item.getItemId() == R.id.nav_weather) {
                 selectedFragment = new WeatherFragment();
             } else if (item.getItemId() == R.id.nav_user_details) {
-                selectedFragment = new UserDetailsFragment();
+                selectedFragment = new SocialFragment();
             } else if (item.getItemId() == R.id.map) {
                 selectedFragment = new MapFragment();
             } else {
