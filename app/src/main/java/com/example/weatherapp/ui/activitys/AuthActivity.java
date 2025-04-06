@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -12,19 +11,12 @@ import androidx.fragment.app.Fragment;
 import com.example.weatherapp.R;
 import com.example.weatherapp.ui.fragments.LoginFragment;
 import com.example.weatherapp.ui.fragments.RegisterFragment;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.example.weatherapp.ui.utils.FirebaseUtils;
 
 public class AuthActivity extends AppCompatActivity {
 
     private Button btnSwitch;
     private boolean isLogin = true;
-    private FirebaseAuth fbAuth;
-    private FirebaseFirestore firestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +24,15 @@ public class AuthActivity extends AppCompatActivity {
         setContentView(R.layout.activity_auth);
 
         btnSwitch = findViewById(R.id.btn_switch);
-        fbAuth = FirebaseAuth.getInstance();
-        firestore = FirebaseFirestore.getInstance();
 
         btnSwitch.setOnClickListener(v -> toggleFragment());
 
-        // If user is already logged in, go to main activity
-        if (fbAuth.getCurrentUser() != null) {
+        if (FirebaseUtils.getCurrentUser() != null) {
             startActivity(new Intent(AuthActivity.this, MainScreenActivity.class));
             finish();
             return;
         }
 
-        // Load login fragment initially
         toggleFragment();
     }
 
@@ -68,52 +56,35 @@ public class AuthActivity extends AppCompatActivity {
                 .commit();
     }
 
-
     public void signUpUser(String fname, String lname, String email, String password) {
-        fbAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = fbAuth.getCurrentUser();
-                        if (user != null) {
-                            // Save user details in Firestore
-                            String userId = user.getUid();
-                            Map<String, Object> userData = new HashMap<>();
-                            userData.put("firstName", fname);
-                            userData.put("lastName", lname);
-                            userData.put("email", email);
-
-                            firestore.collection("users").document(userId).set(userData)
-                                    .addOnSuccessListener(unused -> {
-                                        Toast.makeText(AuthActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(AuthActivity.this, MainScreenActivity.class));
-                                        finish();
-                                    })
-                                    .addOnFailureListener(e ->
-                                            Toast.makeText(AuthActivity.this, "Failed to save user details: " + e.getMessage(), Toast.LENGTH_LONG).show()
-                                    );
-                        }
-                    } else {
-                        Toast.makeText(AuthActivity.this, "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
+        FirebaseUtils.signUpUser(
+                this,
+                fname,
+                lname,
+                email,
+                password,
+                () -> {
+                    startActivity(new Intent(AuthActivity.this, MainScreenActivity.class));
+                    finish();
+                },
+                () -> {} // toast handled in utils
+        );
     }
 
     public void loginUser(String email, String password) {
-        fbAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(AuthActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(AuthActivity.this, MainScreenActivity.class));
-                        finish();
-                    } else {
-                        Toast.makeText(AuthActivity.this, "Login Failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
+        FirebaseUtils.loginUser(
+                this,
+                email,
+                password,
+                () -> {
+                    startActivity(new Intent(AuthActivity.this, MainScreenActivity.class));
+                    finish();
+                },
+                () -> {} // toast handled in utils
+        );
     }
 
     public void recoverPassword(String email) {
-        fbAuth.sendPasswordResetEmail(email)
-                .addOnSuccessListener(unused -> Toast.makeText(AuthActivity.this, "Password reset email sent!", Toast.LENGTH_LONG).show())
-                .addOnFailureListener(e -> Toast.makeText(AuthActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show());
+        FirebaseUtils.recoverPassword(this, email);
     }
 }

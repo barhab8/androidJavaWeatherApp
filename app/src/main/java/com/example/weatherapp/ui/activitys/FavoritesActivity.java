@@ -1,24 +1,25 @@
 package com.example.weatherapp.ui.activitys;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.weatherapp.R;
 import com.example.weatherapp.data.model.WeatherResponse;
 import com.example.weatherapp.data.repository.WeatherRepository;
 import com.example.weatherapp.ui.adapters.FavoritesAdapter;
-import com.example.weatherapp.ui.utils.FirestoreHelper;
+import com.example.weatherapp.ui.utils.FirebaseUtils;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,8 +29,8 @@ public class FavoritesActivity extends AppCompatActivity {
     private RecyclerView rvFavorites;
     private FavoritesAdapter favoritesAdapter;
     private ProgressBar progressBar;
-    private FirestoreHelper firestoreHelper;
     private WeatherRepository weatherRepository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +45,6 @@ public class FavoritesActivity extends AppCompatActivity {
 
         rvFavorites = findViewById(R.id.rvFavorites);
         progressBar = findViewById(R.id.progressBar);
-        firestoreHelper = new FirestoreHelper(this);
         weatherRepository = new WeatherRepository(getBaseContext());
 
         rvFavorites.setLayoutManager(new LinearLayoutManager(this));
@@ -64,9 +64,10 @@ public class FavoritesActivity extends AppCompatActivity {
         finish();
         return true;
     }
+
     private void loadFavorites() {
         progressBar.setVisibility(View.VISIBLE);
-        firestoreHelper.loadFavoriteCities(favoriteCities -> {
+        FirebaseUtils.loadFavoriteCities(this, favoriteCities -> {
             progressBar.setVisibility(View.GONE);
             if (favoriteCities.isEmpty()) {
                 Toast.makeText(this, "No favorite cities yet!", Toast.LENGTH_SHORT).show();
@@ -91,12 +92,12 @@ public class FavoritesActivity extends AppCompatActivity {
                     favoritesAdapter.updateCityIcon(city, iconUrl);
                 }
             }
+
             @Override
             public void onFailure(@NonNull Call<WeatherResponse> call, @NonNull Throwable t) {
                 favoritesAdapter.updateCityTemperature(city, "N/A");
             }
         });
-
     }
 
     @Override
@@ -124,6 +125,4 @@ public class FavoritesActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }

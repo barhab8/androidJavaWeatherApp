@@ -27,7 +27,7 @@ import com.example.weatherapp.data.model.WeatherResponse;
 import com.example.weatherapp.data.repository.WeatherRepository;
 import com.example.weatherapp.ui.adapters.ForecastAdapter;
 import com.example.weatherapp.ui.utils.ChartHelper;
-import com.example.weatherapp.ui.utils.FirestoreHelper;
+import com.example.weatherapp.ui.utils.FirebaseUtils;
 import com.example.weatherapp.ui.utils.UIHelper;
 import com.example.weatherapp.ui.utils.ForecastProcessor;
 import com.github.mikephil.charting.charts.BarChart;
@@ -69,8 +69,6 @@ public class WeatherFragment extends Fragment {
     // Data & Utilities
     private WeatherRepository weatherRepository;
     private ForecastProcessor forecastProcessor;
-    private FirestoreHelper firestoreHelper;
-
 
     // boolean for weather the star is filled or not - city favorite or not.
     private boolean isCityFavorite = false;
@@ -93,7 +91,6 @@ public class WeatherFragment extends Fragment {
 
         initializeUI(view);
         initializeDependencies();
-        firestoreHelper = new FirestoreHelper(requireContext());
         // Listen for unit change updates from SystemSettingsFragment
         requireActivity().getSupportFragmentManager().setFragmentResultListener("unit_changed", this, (requestKey, result) -> {
             SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -123,11 +120,11 @@ public class WeatherFragment extends Fragment {
             String city = tvWeatherLocation.getText().toString().trim();
             if (!city.isEmpty()) {
                 if (isCityFavorite) {
-                    firestoreHelper.removeCityFromFavorites(city);
+                    FirebaseUtils.removeCityFromFavorites(getContext(), city);
                     btnFavorite.setImageResource(R.drawable.ic_star_outline);
                     isCityFavorite = false;
                 } else {
-                    firestoreHelper.saveCityToFavorites(city);
+                    FirebaseUtils.saveCityToFavorites(getContext(), city);
                     btnFavorite.setImageResource(R.drawable.ic_star_filled);
                     isCityFavorite = true;
                 }
@@ -341,7 +338,7 @@ public class WeatherFragment extends Fragment {
 
     private void updateWeatherUI(WeatherResponse weather) {
         tvWeatherLocation.setText(weather.getCity());
-        checkIfCityIsFavorite(weather.getCity());
+        checkIfCityIsFavorite(getContext(), weather.getCity());
         String tempUnitSymbol;
         String windSpeedUnit;
         double windSpeed = weather.getWind().getSpeed();
@@ -383,11 +380,12 @@ public class WeatherFragment extends Fragment {
     }
 
 
-    private void checkIfCityIsFavorite(String city) {
-        firestoreHelper.loadFavoriteCities(favoriteCities -> {
+    private void checkIfCityIsFavorite(Context context, String city) {
+        FirebaseUtils.loadFavoriteCities(context, favoriteCities -> {
             isCityFavorite = favoriteCities.contains(city);
             btnFavorite.setImageResource(isCityFavorite ? R.drawable.ic_star_filled : R.drawable.ic_star_outline);
         });
     }
+
 
 }

@@ -89,7 +89,6 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
     private void fetchWeatherByCity(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String city) {
         WeatherRepository weatherRepo = new WeatherRepository(context);
 
-        // Fetch coordinates from city name
         weatherRepo.getCoordinatesByCity(city).enqueue(new Callback<List<GeocodingResponse>>() {
             @Override
             public void onResponse(Call<List<GeocodingResponse>> call, Response<List<GeocodingResponse>> response) {
@@ -144,8 +143,7 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
 
                     String iconUrl = String.format(ICON_URL_TEMPLATE, weather.getWeather()[0].getIcon());
 
-                    // Load the icon Bitmap on a background thread
-                    new Thread(() -> {
+                     new Thread(() -> {
                         Log.d("WidgetScreen", "Loading icon from URL: " + iconUrl);
                         try {
                             Bitmap bitmap = Picasso.get().load(iconUrl).get();
