@@ -10,8 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.weatherapp.R;
 import com.example.weatherapp.data.model.PostModel;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHolder> {
@@ -49,10 +53,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
         holder.locationName.setText(post.getLocationName());
         holder.weather.setText(post.getWeather());
         holder.postText.setText(post.getText());
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedNow = now.format(formatter);
-        holder.timestamp.setText(formattedNow);
+        com.google.firebase.Timestamp date = post.getTimestamp();
+        Date postDateTime = date.toDate();
+        Instant instant = postDateTime.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zoneId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String formattedDate = localDateTime.format(formatter);
+        holder.timestamp.setText(formattedDate);
     }
 
     @Override

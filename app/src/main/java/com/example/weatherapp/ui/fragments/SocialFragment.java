@@ -1,25 +1,38 @@
 package com.example.weatherapp.ui.fragments;
 
+import static com.example.weatherapp.ui.fragments.WeatherFragment.UNIT;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.weatherapp.R;
 import com.example.weatherapp.data.model.PostModel;
+import com.example.weatherapp.data.model.WeatherResponse;
+import com.example.weatherapp.data.repository.WeatherRepository;
 import com.example.weatherapp.ui.adapters.PostsAdapter;
 import com.example.weatherapp.ui.utils.FirebaseUtils;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SocialFragment extends Fragment {
 
@@ -28,6 +41,8 @@ public class SocialFragment extends Fragment {
     private RecyclerView recyclerViewPosts;
     private PostsAdapter adapter;
     private List<PostModel> postList = new ArrayList<>();
+    private FusedLocationProviderClient fusedLocationClient;
+    private WeatherRepository weatherRepository;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -42,32 +57,80 @@ public class SocialFragment extends Fragment {
         adapter = new PostsAdapter(postList);
         recyclerViewPosts.setAdapter(adapter);
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+        weatherRepository = new WeatherRepository(requireContext());
+
         buttonPost.setOnClickListener(v -> {
             String text = editTextPost.getText().toString().trim();
             if (!text.isEmpty()) {
-                // Default values — can be enhanced with GPS or API!
-                String locationName = "Unknown Location";
-                String weather = "Unknown Weather";
-
-                FirebaseUtils.submitWeatherPost(
-                        getContext(),
-                        text,
-                        locationName,
-                        weather,
-                        () -> {
-                            editTextPost.setText(""); // Clear after posting
-                            loadPosts(); // Refresh list
-                        },
-                        () -> {
-                            // Error handled in FirebaseUtils via Toast
-                        }
-                );
+                fetchLocationAndWeather(text);
             }
         });
 
         loadPosts();
 
         return root;
+    }
+
+    private void fetchLocationAndWeather(String userPost) {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Handle permission outside fragment (e.g., in activity)
+            return;
+        }
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        double lat = location.getLatitude();
+                        double lon = location.getLongitude();
+
+                        // Fetch weather info
+                        weatherRepository.fetchWeatherByCoordinates(lat, lon).enqueue(new Callback<WeatherResponse>() {
+                            @Override
+                            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                                if (response.isSuccessful() && response.body() != null) {
+                                    String tempUnitSymbol;
+                                    switch (UNIT) {
+                                        case "imperial":
+                                            tempUnitSymbol = "°F";
+                                            break;
+                                        case "standard":
+                                            tempUnitSymbol = " K";
+                                            break;
+                                        default:
+                                            tempUnitSymbol = "°C";
+                                            break;
+                                    }
+                                    WeatherResponse weather = response.body();
+                                    String locationName = weather.getCity();
+                                    String weatherInfo = weather.getWeather()[0].getDescription();
+                                    String temprature = String.format("%s%s", weather.getMain().getTemp(), tempUnitSymbol);
+
+                                    FirebaseUtils.submitWeatherPost(
+                                            getContext(),
+                                            userPost,
+                                            locationName,
+                                            weatherInfo + ", " + temprature,
+                                            () -> {
+                                                editTextPost.setText("");
+                                                loadPosts();
+                                            },
+                                            () -> {
+                                                // FirebaseUtils already shows error
+                                            }
+                                    );
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                                t.printStackTrace();
+                            }
+                        });
+
+                    }
+                })
+                .addOnFailureListener(Throwable::printStackTrace);
     }
 
     private void loadPosts() {
@@ -81,5 +144,4 @@ public class SocialFragment extends Fragment {
             e.printStackTrace();
         }
     }
-
 }
