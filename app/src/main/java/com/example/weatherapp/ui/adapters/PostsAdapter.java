@@ -50,7 +50,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         PostModel post = postList.get(position);
         holder.userName.setText(post.getUserName());
-        holder.locationName.setText(post.getLocationName());
+        holder.locationName.setText("From " + post.getLocationName());
         holder.weather.setText(post.getWeather());
         holder.postText.setText(post.getText());
         com.google.firebase.Timestamp date = post.getTimestamp();

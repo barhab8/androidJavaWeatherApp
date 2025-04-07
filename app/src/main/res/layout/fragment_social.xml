@@ -1,44 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/socialFragmentRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".ui.fragments.SocialFragment">
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:hint="What's the weather like?"
-        app:boxCornerRadiusTopStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusBottomEnd="12dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextPost"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:minLines="2"
-            android:maxLines="5" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonPost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Post"
-        android:layout_gravity="end" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPosts"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="16dp"/>
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="8dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="Add Post"
+        app:srcCompat="@android:drawable/ic_input_add" />
+</FrameLayout>
