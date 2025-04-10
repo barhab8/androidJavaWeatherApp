@@ -1,9 +1,9 @@
-package com.example.weatherapp.data.api;
+package com.example.weatherapp.data.weather.api;
 
-import com.example.weatherapp.data.model.AirPollutionResponse;
-import com.example.weatherapp.data.model.ForecastResponse;
-import com.example.weatherapp.data.model.GeocodingResponse;
-import com.example.weatherapp.data.model.WeatherResponse;
+import com.example.weatherapp.data.weather.model.AirPollutionResponse;
+import com.example.weatherapp.data.weather.model.ForecastResponse;
+import com.example.weatherapp.data.weather.model.GeocodingResponse;
+import com.example.weatherapp.data.weather.model.WeatherResponse;
 
 import java.util.List;
 

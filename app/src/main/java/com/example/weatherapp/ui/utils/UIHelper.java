@@ -4,7 +4,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.weatherapp.R;
-import com.example.weatherapp.data.model.AirPollutionResponse;
+import com.example.weatherapp.data.weather.model.AirPollutionResponse;
 
 public class UIHelper {
 

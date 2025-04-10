@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-public class AIRequest {
+public class GptRequest {
 
     @SerializedName("model")
     private String model;
@@ -12,7 +12,7 @@ public class AIRequest {
     @SerializedName("messages")
     private List<Message> messages;
 
-    public AIRequest(String model, String userMessage) {
+    public GptRequest(String model, String userMessage) {
         this.model = model;
         this.messages = Collections.singletonList(new Message("user", userMessage));
     }

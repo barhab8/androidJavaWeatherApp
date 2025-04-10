@@ -1,7 +1,6 @@
 package com.example.weatherapp.ui.utils;
 
-import com.example.weatherapp.data.model.ForecastResponse;
-import com.example.weatherapp.data.model.ForecastResponse.ForecastItem;
+import com.example.weatherapp.data.weather.model.ForecastResponse.ForecastItem;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

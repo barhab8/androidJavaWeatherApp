@@ -1,4 +1,4 @@
-package com.example.weatherapp.data.model;
+package com.example.weatherapp.data.weather.model;
 
 public class PostModel {
     private String userName;

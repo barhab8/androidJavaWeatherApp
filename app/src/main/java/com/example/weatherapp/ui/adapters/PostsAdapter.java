@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.weatherapp.R;
-import com.example.weatherapp.data.model.PostModel;
+import com.example.weatherapp.data.weather.model.PostModel;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;

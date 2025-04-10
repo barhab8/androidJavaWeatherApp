@@ -3,7 +3,7 @@ package com.example.weatherapp.ui.utils;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.example.weatherapp.data.model.PostModel;
+import com.example.weatherapp.data.weather.model.PostModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import android.util.Log;
 
 public class FirebaseUtils {
 

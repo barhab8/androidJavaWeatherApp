@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.R;
-import com.example.weatherapp.data.model.WeatherResponse;
-import com.example.weatherapp.data.repository.WeatherRepository;
+import com.example.weatherapp.data.weather.model.WeatherResponse;
+import com.example.weatherapp.data.weather.repository.WeatherRepository;
 import com.example.weatherapp.ui.adapters.FavoritesAdapter;
 import com.example.weatherapp.ui.utils.FirebaseUtils;
 

@@ -7,21 +7,21 @@ import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
-public interface AIApiService {
+public interface GptApiService {
 
     @Headers({
             "Content-Type: application/json",
-            "Authorization: Bearer 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"
+            "Authorization: Bearer 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"
     })
     @POST("v1/chat/completions")
-    Call<GptResponse> getChatCompletion(@Body AIRequest request);
+    Call<GptResponse> getChatCompletion(@Body GptRequest request);
 
-    static AIApiService create() {
+    static GptApiService create() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://openrouter.ai/api/")  // Updated base URL for OpenRouter
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        return retrofit.create(AIApiService.class);
+        return retrofit.create(GptApiService.class);
     }
 }

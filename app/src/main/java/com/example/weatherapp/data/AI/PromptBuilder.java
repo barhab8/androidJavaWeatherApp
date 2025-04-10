@@ -7,7 +7,7 @@ public class PromptBuilder {
             String weatherDescription, String aqi
     ) {
 
-        return "**Analyze the following weather and forecast data, and generate a one-line weather tip that focuses on practical advice for what people should do or wear, considering the current weather, air quality, and forecasted conditions. Keep the tip relevant to the city and suggest any outdoor activities that would be ideal for the current or upcoming weather.**\n\n" +
+        return "**Analyze the following weather data, and generate a one-line weather tip that focuses on practical advice for what people should do or wear, considering the current weather and air quality. Keep the tip relevant to the city and suggest any outdoor activities that would be ideal for the current weather and what you should wear. **\n\n" +
                 "- **Current Temperature:** " + temp + " °C\n" +
                 "- **Current Wind Speed:** " + windSpeed + " m/s\n" +
                 "- **Current Humidity:** " + humidity + "%\n" +
@@ -15,6 +15,6 @@ public class PromptBuilder {
                 "- **Current Weather Description:** " + weatherDescription + "\n" +
                 "- **Air Quality Index (AQI):** " + aqi + "\n" +
                 "- **City:** " + city + "\n\n" +
-                "**Tip:** Provide a weather-conscious, action-oriented suggestion for the city, considering current and upcoming conditions.";
+                "**Tip:** Provide a weather-conscious, action-oriented suggestion for the city, considering current conditions.";
     }
 }

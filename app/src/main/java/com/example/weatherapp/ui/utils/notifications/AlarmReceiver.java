@@ -10,11 +10,10 @@ import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
-import com.example.weatherapp.data.model.WeatherResponse;
-import com.example.weatherapp.data.repository.WeatherRepository;
+import com.example.weatherapp.data.weather.model.WeatherResponse;
+import com.example.weatherapp.data.weather.repository.WeatherRepository;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import retrofit2.Call;

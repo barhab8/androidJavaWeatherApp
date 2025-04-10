@@ -17,7 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.weatherapp.R;
-import com.example.weatherapp.ui.utils.widget.WeatherWidgetProvider;
+import com.example.weatherapp.ui.widget.WeatherWidgetProvider;
 
 public class WidgetSettingsFragment extends Fragment {
     private EditText cityEditText;

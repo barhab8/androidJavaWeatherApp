@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.R;
-import com.example.weatherapp.data.model.ForecastResponse;
+import com.example.weatherapp.data.weather.model.ForecastResponse;
 import com.example.weatherapp.ui.utils.ForecastProcessor;
 import com.squareup.picasso.Picasso;
 

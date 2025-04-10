@@ -2,8 +2,8 @@ package com.example.weatherapp.ui.utils;
 
 import android.graphics.Color;
 
-import com.example.weatherapp.data.model.AirPollutionResponse;
-import com.example.weatherapp.data.model.ForecastResponse;
+import com.example.weatherapp.data.weather.model.AirPollutionResponse;
+import com.example.weatherapp.data.weather.model.ForecastResponse;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;

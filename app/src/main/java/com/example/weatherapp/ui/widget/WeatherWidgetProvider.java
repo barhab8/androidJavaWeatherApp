@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.utils.widget;
+package com.example.weatherapp.ui.widget;
 
 import static com.example.weatherapp.ui.fragments.WeatherFragment.ICON_URL_TEMPLATE;
 import static com.example.weatherapp.ui.fragments.WeatherFragment.UNIT;
@@ -19,9 +19,9 @@ import android.widget.RemoteViews;
 import androidx.core.content.ContextCompat;
 
 import com.example.weatherapp.R;
-import com.example.weatherapp.data.model.GeocodingResponse;
-import com.example.weatherapp.data.model.WeatherResponse;
-import com.example.weatherapp.data.repository.WeatherRepository;
+import com.example.weatherapp.data.weather.model.GeocodingResponse;
+import com.example.weatherapp.data.weather.model.WeatherResponse;
+import com.example.weatherapp.data.weather.repository.WeatherRepository;
 import com.example.weatherapp.ui.activitys.MainScreenActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;

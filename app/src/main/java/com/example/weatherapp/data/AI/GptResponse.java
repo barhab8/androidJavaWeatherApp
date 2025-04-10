@@ -3,7 +3,7 @@ package com.example.weatherapp.data.AI;
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-public class AIResponse {
+public class GptResponse {
     @SerializedName("id")
     public String id;
 

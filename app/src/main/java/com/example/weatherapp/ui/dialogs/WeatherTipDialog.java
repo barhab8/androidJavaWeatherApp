@@ -69,7 +69,7 @@ public class WeatherTipDialog extends Dialog {
                 aqi
         );
 
-        GptRequest request = new GptRequest("gpt-4o-mini", prompt);
+        GptRequest request = new GptRequest("nvidia/llama-3.1-nemotron-nano-8b-v1:free", prompt);
 
         gptApi.getChatCompletion(request).enqueue(new Callback<GptResponse>() {
             @Override
@@ -81,7 +81,6 @@ public class WeatherTipDialog extends Dialog {
                     try {
                         String errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
                         Toast.makeText(getContext(), "Error: " + errorBody, Toast.LENGTH_LONG).show();
-                        Log.e("API Error", "Error: " + errorBody);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
