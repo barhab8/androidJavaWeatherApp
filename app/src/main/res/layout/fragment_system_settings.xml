@@ -61,6 +61,22 @@
                 android:entries="@array/theme_options"
                 android:layout_marginTop="20dp"/>
 
+            <TextView
+                android:id="@+id/tvCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Widget City"
+                android:textSize="18sp"
+                android:layout_marginTop="50dp"/>
+
+            <EditText
+                android:id="@+id/cityEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Enter City"
+                android:inputType="text"
+                android:layout_marginTop="20dp"/>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
                 android:layout_width="wrap_content"

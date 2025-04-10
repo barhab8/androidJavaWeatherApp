@@ -1,5 +1,8 @@
 package com.example.weatherapp.ui.fragments;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -24,11 +28,14 @@ public class SystemSettingsFragment extends Fragment {
 
     private Spinner spinnerUnits, spinnerMaps, spinnerTheme;
     private Button btnSave;
+    private EditText cityEditText;
+
 
     private static final String PREFS_NAME = "weather_prefs";
     private static final String UNIT_KEY = "unit";
     private static final String MAP_KEY = "map_provider";
     private static final String THEME_KEY = "theme";
+    private static final String CITY_KEY = "city";
 
     @Nullable
     @Override
@@ -39,12 +46,16 @@ public class SystemSettingsFragment extends Fragment {
         spinnerMaps = view.findViewById(R.id.spinnerMaps);
         spinnerTheme = view.findViewById(R.id.spinnerTheme);
         btnSave = view.findViewById(R.id.btnSave);
+        cityEditText = view.findViewById(R.id.cityEditText);
 
         // Load saved preferences
-        SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, requireContext().MODE_PRIVATE);
+        SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences widgetPrefs = requireContext().getSharedPreferences("WIDGET_PREFS", Context.MODE_PRIVATE);
         spinnerUnits.setSelection(getUnitIndex(prefs.getString(UNIT_KEY, "metric")));
         spinnerMaps.setSelection(getMapIndex(prefs.getString(MAP_KEY, "world_weather")));
         spinnerTheme.setSelection(getThemeIndex(prefs.getString(THEME_KEY, "system")));
+
+        cityEditText.setText(widgetPrefs.getString("city", ""));
 
         // Handle save button click
         btnSave.setOnClickListener(v -> savePreferences());
@@ -72,6 +83,7 @@ public class SystemSettingsFragment extends Fragment {
         requireContext().sendBroadcast(intent);
 
         applyTheme(selectedTheme);
+        saveCity();
         Toast.makeText(requireContext(), "Saved units: " + selectedUnit + " ,saved map: " + selectedMap + " ,saved theme: " + selectedTheme , Toast.LENGTH_LONG).show();
     }
 
@@ -137,5 +149,31 @@ public class SystemSettingsFragment extends Fragment {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                 break;
         }
+    }
+
+
+
+
+
+
+
+    private void saveCity() {
+        String city = cityEditText.getText().toString().trim();
+        if (!city.isEmpty()) {
+            SharedPreferences widgetPrefs = requireContext().getSharedPreferences("WIDGET_PREFS", Context.MODE_PRIVATE);
+            widgetPrefs.edit().putString(CITY_KEY, city).apply();
+            updateWidget(requireContext());
+            Toast.makeText(getContext(), "City saved: " + city, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "Please enter a city", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateWidget(Context context) {
+        Intent intent = new Intent(context, WeatherWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, WeatherWidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        context.sendBroadcast(intent);
     }
 }

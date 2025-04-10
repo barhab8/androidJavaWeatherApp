@@ -7,7 +7,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.weatherapp.ui.fragments.NotificationSettingsFragment;
 import com.example.weatherapp.ui.fragments.SystemSettingsFragment;
 import com.example.weatherapp.ui.fragments.UserDetailsFragment;
-import com.example.weatherapp.ui.fragments.WidgetSettingsFragment;
 
 public class SettingsPagerAdapter extends FragmentStateAdapter {
 
@@ -19,14 +18,10 @@ public class SettingsPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-            case 0:
-                return new UserDetailsFragment();
             case 1:
                 return new NotificationSettingsFragment();
             case 2:
                 return new SystemSettingsFragment();
-            case 3:
-                return  new WidgetSettingsFragment();
             default:
                 return new UserDetailsFragment();
         }
@@ -34,6 +29,6 @@ public class SettingsPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 4;
+        return 3;
     }
 }

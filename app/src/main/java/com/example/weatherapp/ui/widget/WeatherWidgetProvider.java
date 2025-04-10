@@ -60,7 +60,7 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
     }
 
     private void getUserLocationAndUpdateWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        SharedPreferences prefs = context.getSharedPreferences("WidgetPrefs", Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences("WIDGET_PREFS", Context.MODE_PRIVATE);
         String city = prefs.getString("city", "");
         if (!city.isEmpty()) {
             fetchWeatherByCity(context, appWidgetManager, appWidgetId, city);
