@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,8 @@ public class WeatherTipDialog extends Dialog {
         setContentView(view);
 
         tipTextView = view.findViewById(R.id.tipTextView);
+        Button closeButton = view.findViewById(R.id.closeButton);
+        closeButton.setOnClickListener(v -> dismiss());
 
         generateWeatherTip();
     }
