@@ -26,6 +26,7 @@ import com.example.weatherapp.data.model.GeocodingResponse;
 import com.example.weatherapp.data.model.WeatherResponse;
 import com.example.weatherapp.data.repository.WeatherRepository;
 import com.example.weatherapp.ui.adapters.ForecastAdapter;
+import com.example.weatherapp.ui.dialogs.WeatherTipDialog;
 import com.example.weatherapp.ui.utils.ChartHelper;
 import com.example.weatherapp.ui.utils.FirebaseUtils;
 import com.example.weatherapp.ui.utils.UIHelper;
@@ -61,6 +62,8 @@ public class WeatherFragment extends Fragment {
     private android.widget.LinearLayout rootLayout;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LineChart forecastChart;
+    private android.widget.ImageButton btnAskAI;
+
 
     // Settings variables
     private static final String PREFS_NAME = "weather_prefs";
@@ -133,6 +136,12 @@ public class WeatherFragment extends Fragment {
             }
         });
 
+        btnAskAI.setOnClickListener(v -> {
+            WeatherTipDialog askAiDialog = new WeatherTipDialog(requireContext(), tvWeatherLocation.getText().toString(),tvWeatherTemperature.getText().toString(), tvWeatherWindSpeed.getText().toString(), tvWeatherHumidity.getText().toString(), tvWeatherVisibility.getText().toString(), tvWeatherDescription.getText().toString(), tvAirQualityIndex.getText().toString());
+            askAiDialog.show();
+        });
+
+
         return view;
     }
 
@@ -150,6 +159,8 @@ public class WeatherFragment extends Fragment {
         tvWeatherWindDegree = view.findViewById(R.id.tvWeatherWindDegree);
         tvAirQualityIndex = view.findViewById(R.id.tvAirQualityIndex);
         rootLayout = view.findViewById(R.id.rootLayout);
+        btnAskAI = view.findViewById(R.id.btnAskAI);
+
 
         // charts
         forecastChart = view.findViewById(R.id.forecastChart);
