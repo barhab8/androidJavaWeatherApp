@@ -11,7 +11,7 @@ public interface GptApiService {
 
     @Headers({
             "Content-Type: application/json",
-            "Authorization: Bearer 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"
+            "Authorization: Bearer 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"
     })
     @POST("v1/chat/completions")
     Call<GptResponse> getChatCompletion(@Body GptRequest request);
