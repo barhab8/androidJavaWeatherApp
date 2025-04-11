@@ -151,12 +151,6 @@ public class SystemSettingsFragment extends Fragment {
         }
     }
 
-
-
-
-
-
-
     private void saveCity() {
         String city = cityEditText.getText().toString().trim();
         if (!city.isEmpty()) {

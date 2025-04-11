@@ -11,14 +11,14 @@ public interface GptApiService {
 
     @Headers({
             "Content-Type: application/json",
-            "Authorization: Bearer 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"
+            "Authorization: Bearer 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"
     })
     @POST("v1/chat/completions")
     Call<GptResponse> getChatCompletion(@Body GptRequest request);
 
     static GptApiService create() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://openrouter.ai/api/")  // Updated base URL for OpenRouter
+                .baseUrl("https://openrouter.ai/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
