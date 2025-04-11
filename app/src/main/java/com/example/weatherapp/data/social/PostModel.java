@@ -1,6 +1,8 @@
-package com.example.weatherapp.data.weather.model;
+package com.example.weatherapp.data.social;
 
 public class PostModel {
+    private String postId;
+    private String userId;
     private String userName;
     private String locationName;
     private String weather;
@@ -9,12 +11,26 @@ public class PostModel {
 
     public PostModel() {}
 
-    public PostModel(String userName, String locationName, String weather, String text, com.google.firebase.Timestamp timestamp) {
+    public PostModel(String postId, String userId, String userName, String locationName, String weather, String text, com.google.firebase.Timestamp timestamp) {
+        this.postId = postId;
+        this.userId = userId;
         this.userName = userName;
         this.locationName = locationName;
         this.weather = weather;
         this.text = text;
         this.timestamp = timestamp;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public String getUserName() {

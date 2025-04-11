@@ -174,11 +174,9 @@ public class AddPostDialog extends Dialog {
             return;
         }
 
-        // If we already have weather data for this city, post immediately
         if (locationName[0] != null && weatherSummary[0] != null && city.equalsIgnoreCase(locationName[0])) {
             finalizePost(postText);
         } else {
-            // Otherwise, fetch weather for the city first
             textViewWeatherPreview.setText("Fetching weather for: " + city);
 
             weatherRepository.fetchWeatherByCity(city).enqueue(new Callback<WeatherResponse>() {
@@ -186,7 +184,6 @@ public class AddPostDialog extends Dialog {
                 public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         processWeatherResponse(response.body());
-                        // Now post with the newly fetched weather
                         finalizePost(postText);
                     } else {
                         textViewWeatherPreview.setText("Failed to get weather for: " + city);

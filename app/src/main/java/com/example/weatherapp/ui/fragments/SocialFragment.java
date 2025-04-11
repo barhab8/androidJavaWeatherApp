@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.R;
-import com.example.weatherapp.data.weather.model.PostModel;
+import com.example.weatherapp.data.social.PostModel;
 import com.example.weatherapp.ui.adapters.PostsAdapter;
 import com.example.weatherapp.ui.dialogs.AddPostDialog;
 import com.example.weatherapp.ui.utils.FirebaseUtils;
