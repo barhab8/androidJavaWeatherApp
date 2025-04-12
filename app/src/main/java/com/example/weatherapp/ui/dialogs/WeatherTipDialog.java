@@ -13,9 +13,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.weatherapp.R;
-import com.example.weatherapp.data.AI.GptApiService;
-import com.example.weatherapp.data.AI.GptRequest;
-import com.example.weatherapp.data.AI.GptResponse;
+import com.example.weatherapp.data.AI.GeminiApiService;
+import com.example.weatherapp.data.AI.GeminiRequest;
+import com.example.weatherapp.data.AI.GeminiResponse;
 import com.example.weatherapp.data.AI.PromptBuilder;
 
 import retrofit2.Call;
@@ -33,7 +33,9 @@ public class WeatherTipDialog extends Dialog {
     private final String aqi;
 
     private TextView tipTextView;
-    private final GptApiService gptApi = GptApiService.create();
+    private final GeminiApiService geminiApi = GeminiApiService.create();
+
+    String apiKey = "AIzaSyDhTKtGcU-Lk4RRU0GWWlksRDJ3fBvxnsM";
 
     public WeatherTipDialog(@NonNull Context context,
                             String city,
@@ -68,15 +70,13 @@ public class WeatherTipDialog extends Dialog {
 
     private void generateWeatherTip() {
         String prompt = PromptBuilder.buildPrompt(
-                city, temp, windSpeed, humidity, visibility, weatherDescription,
-                aqi
+                city, temp, windSpeed, humidity, visibility, weatherDescription, aqi
         );
 
-        GptRequest request = new GptRequest("nvidia/llama-3.1-nemotron-nano-8b-v1:free", prompt);
-
-        gptApi.getChatCompletion(request).enqueue(new Callback<GptResponse>() {
+        GeminiRequest request = new GeminiRequest(prompt);
+        geminiApi.getChatCompletion(apiKey, request).enqueue(new Callback<GeminiResponse>() {
             @Override
-            public void onResponse(Call<GptResponse> call, Response<GptResponse> response) {
+            public void onResponse(Call<GeminiResponse> call, Response<GeminiResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     String tip = response.body().getFirstMessageContent();
                     tipTextView.setText(tip);
@@ -91,9 +91,8 @@ public class WeatherTipDialog extends Dialog {
                 }
             }
 
-
             @Override
-            public void onFailure(Call<GptResponse> call, Throwable t) {
+            public void onFailure(Call<GeminiResponse> call, Throwable t) {
                 tipTextView.setText("Error: " + t.getMessage());
                 Toast.makeText(getContext(), "Failed to fetch tip", Toast.LENGTH_SHORT).show();
             }
