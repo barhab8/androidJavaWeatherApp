@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -47,6 +48,50 @@ public class SystemSettingsFragment extends Fragment {
         spinnerTheme = view.findViewById(R.id.spinnerTheme);
         btnSave = view.findViewById(R.id.btnSave);
         cityEditText = view.findViewById(R.id.cityEditText);
+
+        ImageView infoTempUnit = view.findViewById(R.id.infoTempUnit);
+        ImageView infoMapProvider = view.findViewById(R.id.infoMapProvider);
+        ImageView infoTheme = view.findViewById(R.id.infoTheme);
+        ImageView infoCity = view.findViewById(R.id.infoWidgetCity);
+
+
+        // Messages for info dialogs
+        infoTempUnit.setOnClickListener(v -> showInfoDialog(
+                "Temperature Unit",
+                "Choose how temperatures are displayed throughout the app:\n\n" +
+                        "• Metric (°C): Common in most countries.\n" +
+                        "• Imperial (°F): Common in the United States.\n" +
+                        "• Standard (Kelvin): Scientific scale.\n\n" +
+                        "Your selection will affect all temperature values shown, including in widgets and notifications."));
+
+        infoMapProvider.setOnClickListener(v -> showInfoDialog(
+                "Map Provider",
+                "Select the service that provides the weather maps:\n\n" +
+                        "• World Weather: Default map with essential overlays.\n" +
+                        "• Open Weather: Offers more detailed weather visualization.\n" +
+                        "• Zoom Earth: Satellite imagery and radar layers.\n\n" +
+                        "The chosen provider may affect loading speed and visual style."));
+
+        infoTheme.setOnClickListener(v -> showInfoDialog(
+                "App Theme",
+                "Customize the appearance of the app interface:\n\n" +
+                        "• Light: Bright interface, great for daylight use.\n" +
+                        "• Dark: Battery-saving and eye-friendly in low light.\n" +
+                        "• System: Follows your device’s current system theme.\n\n" +
+                        "This affects all screens within the app immediately after saving."));
+
+        infoCity.setOnClickListener(v -> showInfoDialog(
+                "Widget City",
+                "Enter the name of the city you want the home screen widget to show weather for.\n\n" +
+                        "After saving:\n" +
+                        "1. Long-press on an empty space on your home screen.\n" +
+                        "2. Tap \"Widgets\".\n" +
+                        "3. Scroll to find \"WeatherApp\".\n" +
+                        "4. Drag the widget to your home screen.\n\n" +
+                        "Once placed, it will automatically update to show the weather for the city you entered here.\n\n" +
+                        "You can change the city anytime from this settings screen."));
+
+
 
         // Load saved preferences
         SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -165,5 +210,13 @@ public class SystemSettingsFragment extends Fragment {
         int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, WeatherWidgetProvider.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         context.sendBroadcast(intent);
+    }
+
+    private void showInfoDialog(String title, String message) {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .show();
     }
 }
