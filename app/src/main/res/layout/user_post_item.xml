@@ -4,14 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    android:layout_marginHorizontal="8dp"
-    app:cardElevation="2dp"
-    app:cardCornerRadius="12dp">
+    android:layout_marginBottom="16dp"
+    android:layout_marginHorizontal="12dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="16dp"
+    app:strokeColor="?attr/colorPrimary"
+    app:strokeWidth="1dp">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingEnd="2dp"> <!-- reserve space for delete button -->
 
         <LinearLayout
             android:orientation="vertical"
@@ -57,17 +60,17 @@
                 android:layout_marginTop="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/btnDeletePost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|top"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center|end"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Delete post"
             android:padding="8dp"
-            android:src="@android:drawable/ic_menu_delete" />
+            android:src="@android:drawable/ic_menu_delete"
+            app:tint="?attr/colorError" />
     </FrameLayout>
 </com.google.android.material.card.MaterialCardView>

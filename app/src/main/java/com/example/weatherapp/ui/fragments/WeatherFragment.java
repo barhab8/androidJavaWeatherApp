@@ -96,7 +96,7 @@ public class WeatherFragment extends Fragment {
         // Listen for unit change updates from SystemSettingsFragment
         requireActivity().getSupportFragmentManager().setFragmentResultListener("unit_changed", this, (requestKey, result) -> {
             SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-            UNIT = prefs.getString(UNIT_KEY, "metric"); // Update unit
+            UNIT = prefs.getString(UNIT_KEY, "metric");
             weatherRepository.setUnit(requireContext(), UNIT);
             refreshWeatherData(); // Refresh weather based on new unit
         });
@@ -217,7 +217,7 @@ public class WeatherFragment extends Fragment {
         }
     }
 
-    // 1 - City-based API calls grouped together
+    //City-based API calls
     public void fetchWeatherDataByCity(String city, boolean toast) {
         // Fetch weather data by city
         weatherRepository.fetchWeatherByCity(city).enqueue(new Callback<WeatherResponse>() {
@@ -295,7 +295,7 @@ public class WeatherFragment extends Fragment {
         });
     }
 
-    // 2 - Latitude/Longitude-based API calls grouped together
+    //Latitude/Longitude-based API calls
     private void fetchWeatherDataByCoordinates(double latitude, double longitude) {
         // Fetch weather data by coordinates
         weatherRepository.fetchWeatherByCoordinates(latitude, longitude).enqueue(new Callback<WeatherResponse>() {
@@ -353,7 +353,6 @@ public class WeatherFragment extends Fragment {
         String windSpeedUnit;
         double windSpeed = weather.getWind().getSpeed();
 
-        // Determine unit symbols based on selected unit
         switch (UNIT) {
             case "imperial":
                 tempUnitSymbol = "°F";

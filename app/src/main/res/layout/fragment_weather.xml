@@ -198,8 +198,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:contentDescription="Ask AI"
+        android:contentDescription="🤖 Ask AI"
         app:srcCompat="@drawable/ic_ai"
-        app:tint="@android:color/white" />
+        app:tint="@android:color/white"
+    />
 
 </FrameLayout>

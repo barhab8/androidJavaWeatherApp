@@ -67,9 +67,6 @@ public class SystemSettingsFragment extends Fragment {
         String selectedUnit = getUnitFromIndex(spinnerUnits.getSelectedItemPosition());
         String selectedMap = getMapFromIndex(spinnerMaps.getSelectedItemPosition());
         String selectedTheme = getThemeFromIndex(spinnerTheme.getSelectedItemPosition());
-
-        Log.d(TAG, "Saving preferences: Unit=" + selectedUnit + ", Map=" + selectedMap + ", Theme=" + selectedTheme);
-
         SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, requireContext().MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(UNIT_KEY, selectedUnit);
@@ -157,7 +154,6 @@ public class SystemSettingsFragment extends Fragment {
             SharedPreferences widgetPrefs = requireContext().getSharedPreferences("WIDGET_PREFS", Context.MODE_PRIVATE);
             widgetPrefs.edit().putString(CITY_KEY, city).apply();
             updateWidget(requireContext());
-            Toast.makeText(getContext(), "City saved: " + city, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getContext(), "Please enter a city", Toast.LENGTH_SHORT).show();
         }

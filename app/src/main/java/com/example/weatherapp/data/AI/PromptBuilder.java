@@ -30,7 +30,7 @@ public class PromptBuilder {
                 "- **Current Humidity:** " + humidity + "%\n" +
                 "- **Current Visibility:** " + visibility + "\n" +
                 "- **Current Weather Description:** " + weatherDescription + "\n" +
-                "- **Air Quality Index (AQI):** " + aqi + "\n" +
+                "- **Air Quality Index (AQI):** " + aqi + "(Possible values: 1, 2, 3, 4, 5. Where 1 = Good, 2 = Fair, 3 = Moderate, 4 = Poor, 5 = Very Poor)\n" +
                 "- **City:** " + city + "\n\n" +
                 "**Tip:** Provide a weather-conscious, action-oriented suggestion for the city, considering current conditions.";
     }
