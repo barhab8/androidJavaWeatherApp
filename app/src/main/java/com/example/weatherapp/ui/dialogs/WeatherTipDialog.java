@@ -17,6 +17,9 @@ import com.example.weatherapp.data.AI.GeminiApiService;
 import com.example.weatherapp.data.AI.GeminiRequest;
 import com.example.weatherapp.data.AI.GeminiResponse;
 import com.example.weatherapp.data.AI.PromptBuilder;
+import com.example.weatherapp.data.weather.model.ForecastResponse;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,10 +35,14 @@ public class WeatherTipDialog extends Dialog {
     private final String weatherDescription;
     private final String aqi;
 
+
+
     private TextView tipTextView;
     private final GeminiApiService geminiApi = GeminiApiService.create();
 
     String apiKey = "AIzaSyDhTKtGcU-Lk4RRU0GWWlksRDJ3fBvxnsM";
+
+    private final List<ForecastResponse.ForecastItem> forecastList;
 
     public WeatherTipDialog(@NonNull Context context,
                             String city,
@@ -44,7 +51,8 @@ public class WeatherTipDialog extends Dialog {
                             String humidity,
                             String visibility,
                             String weatherDescription,
-                            String aqi) {
+                            String aqi,
+                            List<ForecastResponse.ForecastItem> forecastList) {
         super(context);
         this.city = city;
         this.temp = temp;
@@ -53,7 +61,9 @@ public class WeatherTipDialog extends Dialog {
         this.visibility = visibility;
         this.weatherDescription = weatherDescription;
         this.aqi = aqi;
+        this.forecastList = forecastList;
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +80,7 @@ public class WeatherTipDialog extends Dialog {
 
     private void generateWeatherTip() {
         String prompt = PromptBuilder.buildPrompt(
-                city, temp, windSpeed, humidity, visibility, weatherDescription, aqi
+                city, temp, windSpeed, humidity, visibility, weatherDescription, aqi, forecastList
         );
 
         GeminiRequest request = new GeminiRequest(prompt);

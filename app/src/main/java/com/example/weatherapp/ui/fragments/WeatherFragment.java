@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -71,6 +73,7 @@ public class WeatherFragment extends Fragment {
     // Data & Utilities
     private WeatherRepository weatherRepository;
     private ForecastProcessor forecastProcessor;
+    private List<ForecastResponse.ForecastItem> currentForecastList = new ArrayList<>();
 
     // boolean for weather the star is filled or not - city favorite or not.
     private boolean isCityFavorite = false;
@@ -136,7 +139,7 @@ public class WeatherFragment extends Fragment {
         });
 
         btnAskAI.setOnClickListener(v -> {
-            WeatherTipDialog askAiDialog = new WeatherTipDialog(requireContext(), tvWeatherLocation.getText().toString(),tvWeatherTemperature.getText().toString(), tvWeatherWindSpeed.getText().toString(), tvWeatherHumidity.getText().toString(), tvWeatherVisibility.getText().toString(), tvWeatherDescription.getText().toString(), tvAirQualityIndex.getText().toString());
+            WeatherTipDialog askAiDialog = new WeatherTipDialog(requireContext(), tvWeatherLocation.getText().toString(),tvWeatherTemperature.getText().toString(), tvWeatherWindSpeed.getText().toString(), tvWeatherHumidity.getText().toString(), tvWeatherVisibility.getText().toString(), tvWeatherDescription.getText().toString(), tvAirQualityIndex.getText().toString(), currentForecastList);
             askAiDialog.show();
         });
 
@@ -242,7 +245,9 @@ public class WeatherFragment extends Fragment {
             public void onResponse(Call<ForecastResponse> call, Response<ForecastResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<ForecastResponse.ForecastItem> forecastList = response.body().getForecastList();
+                    Log.d("Forecast", forecastProcessor.getDailyForecast(forecastList).toString());
                     forecastAdapter.setForecastList(forecastProcessor.getDailyForecast(forecastList));
+                    currentForecastList = forecastProcessor.getDailyForecast(forecastList);
                     ChartHelper.populateForecastChart(forecastChart, forecastList);
                 } else {
                     if(toast) {
@@ -319,6 +324,7 @@ public class WeatherFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     List<ForecastResponse.ForecastItem> forecastList = response.body().getForecastList();
                     forecastAdapter.setForecastList(forecastProcessor.getDailyForecast(forecastList));
+                    currentForecastList = forecastProcessor.getDailyForecast(forecastList);
                     ChartHelper.populateForecastChart(forecastChart, forecastList);
                 } else {
                     showToast("Failed to fetch forecast.");

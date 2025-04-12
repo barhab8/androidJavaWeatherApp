@@ -28,7 +28,6 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     private static final String UNIT_KEY = "unit";
 
     public ForecastAdapter(Context context) {
-        // Load unit from SharedPreferences
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         unit = prefs.getString(UNIT_KEY, "metric");
     }

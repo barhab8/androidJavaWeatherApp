@@ -1,12 +1,17 @@
 package com.example.weatherapp.data.AI;
 
+import com.example.weatherapp.data.weather.model.ForecastResponse;
+import com.example.weatherapp.ui.utils.ForecastProcessor;
+
+import java.util.List;
+
 import static com.example.weatherapp.ui.fragments.WeatherFragment.UNIT;
 
 public class PromptBuilder {
 
     public static String buildPrompt(
             String city, String temp, String windSpeed, String humidity, String visibility,
-            String weatherDescription, String aqi
+            String weatherDescription, String aqi, List<ForecastResponse.ForecastItem> forecastList
     ) {
         String tempUnitSymbol, windSpeedUnit;
         switch (UNIT) {
@@ -24,16 +29,46 @@ public class PromptBuilder {
                 break;
         }
 
-        return "**Analyze the following weather data, and generate a one-line weather tip that focuses on practical advice for what people should do or wear, considering the current weather and air quality. Keep the tip relevant to the city and suggest any outdoor activities that would be ideal for the current weather and what you should wear. **\n\n" +
-                "- **Current Temperature:** " + temp + " " + tempUnitSymbol + "\n" +
-                "- **Current Wind Speed:** " + windSpeed +" " + windSpeedUnit +" \n" +
-                "- **Current Humidity:** " + humidity + "%\n" +
-                "- **Current Visibility:** " + visibility + "\n" +
-                "- **Current Weather Description:** " + weatherDescription + "\n" +
-                "- **Air Quality Index (AQI):** " + aqi + "(Possible values: 1, 2, 3, 4, 5. Where 1 = Good, 2 = Fair, 3 = Moderate, 4 = Poor, 5 = Very Poor)\n" +
-                "- **City:** " + city + "\n\n" +
-                "**Tip:** Provide a weather-conscious, action-oriented suggestion for the city, considering current conditions.";
+        StringBuilder forecastSection = new StringBuilder();
+        ForecastProcessor forecastProcessor = new ForecastProcessor();
+
+        for (ForecastResponse.ForecastItem item : forecastList) {
+            String date = forecastProcessor.formatDate(item.getDateTime());
+            String forecastTemp = String.format("%.1f%s", item.getMain().getTemp(), tempUnitSymbol);
+            String desc = item.getWeather().get(0).getDescription();
+
+            forecastSection.append("- ").append(date)
+                    .append(": ").append(forecastTemp)
+                    .append(", ").append(desc)
+                    .append("\n");
+        }
+
+        return "Based on the provided weather data, generate a concise, one-line tip for residents of "+ city + ". This tip should offer practical advice on:\u200B\n" +
+                "\n" +
+                "Appropriate clothing choices considering current temperature, wind speed, humidity, visibility, and weather conditions.\u200B\n" +
+                "\n" +
+                "Suitable outdoor activities given the current air quality index (AQI).\u200B\n" +
+                "\n" +
+                "Preparations for the upcoming week's weather forecast.\u200B\n" +
+                "\n" +
+                "Weather Data:\n" +
+                "\n" +
+                "Current Temperature: " + temp + " " + tempUnitSymbol + "\n" +
+                "\n" +
+                "Wind Speed:" + windSpeed + " " +  windSpeedUnit + "\n" +
+                "\n" +
+                "Humidity:" + humidity + "%\n" +
+                "\n" +
+                "Visibility:" + visibility + "\n" +
+                "\n" +
+                "Weather Description:" + weatherDescription + "\n" +
+                "\n" +
+                "Air Quality Index (AQI):" + aqi + "(1=Good, 5=Very Poor)\n" +
+                "\n" +
+                "City:" + city + "\n" +
+                "\n" +
+                "5-Day Forecast:" + forecastSection + "\n" +
+                "\n" +
+                "Instruction: Provide a weather-conscious, action-oriented suggestion tailored for" +city + "residents and tourists.\"\u200B";
     }
-
-
 }
