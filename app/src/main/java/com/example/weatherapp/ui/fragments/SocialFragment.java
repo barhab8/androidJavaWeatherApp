@@ -1,6 +1,7 @@
 package com.example.weatherapp.ui.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +72,6 @@ public class SocialFragment extends Fragment implements AddPostDialog.OnPostAdde
                         if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                             ReverseGeocodingResponse geoResponse = response.body().get(0);
                             userCity = geoResponse.getName();
-                            Toast.makeText(requireContext(), "Using location: " + userCity, Toast.LENGTH_SHORT).show();
                             setupFilters(root);
                         } else {
                             userCity = null;
@@ -180,30 +180,58 @@ public class SocialFragment extends Fragment implements AddPostDialog.OnPostAdde
     private boolean checkTempMatch(String weatherSummary) {
         try {
             String tempStr = weatherSummary.replaceAll("[^0-9.]", "");
-            double temp = Double.parseDouble(tempStr);
+            double originalTemp = Double.parseDouble(tempStr);
 
-            switch (UNIT) {
-                case "imperial": // °F
-                    if (selectedTempCategory.equals("Cold")) return temp < 50;
-                    if (selectedTempCategory.equals("Fine")) return temp >= 50 && temp <= 77;
-                    if (selectedTempCategory.equals("Warm")) return temp > 77;
+            // Extract unit: check if °F, °C, or K appears in the string
+            String lower = weatherSummary.toLowerCase();
+            String unit;
+            if (lower.contains("°f")) {
+                unit = "imperial";
+            } else if (lower.contains("°c")) {
+                unit = "metric";
+            } else {
+                unit = "standard"; // default fallback
+            }
+
+            // Convert all units to Celsius for backend filtering
+            double tempCelsius;
+            switch (unit) {
+                case "imperial": // °F → °C
+                    tempCelsius = (originalTemp - 32) * 5 / 9;
                     break;
-                case "standard": // Kelvin
-                    if (selectedTempCategory.equals("Cold")) return temp < 283;
-                    if (selectedTempCategory.equals("Fine")) return temp >= 283 && temp <= 298;
-                    if (selectedTempCategory.equals("Warm")) return temp > 298;
+                case "standard": // K → °C
+                    tempCelsius = originalTemp - 273.15;
                     break;
-                default: // metric °C
-                    if (selectedTempCategory.equals("Cold")) return temp < 10;
-                    if (selectedTempCategory.equals("Fine")) return temp >= 10 && temp <= 25;
-                    if (selectedTempCategory.equals("Warm")) return temp > 25;
+                default: // metric
+                    tempCelsius = originalTemp;
                     break;
             }
+
+            // Filter logic in Celsius
+            boolean match;
+            switch (selectedTempCategory) {
+                case "Cold":
+                    match = tempCelsius < 10;
+                    break;
+                case "Fine":
+                    match = tempCelsius >= 10 && tempCelsius <= 25;
+                    break;
+                case "Warm":
+                    match = tempCelsius > 25;
+                    break;
+                default:
+                    match = true;
+            }
+
+            return match;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
+
+
+
 
     private String normalizeCityName(String name) {
         if (name == null) return "";
