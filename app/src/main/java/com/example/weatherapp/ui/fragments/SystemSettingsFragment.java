@@ -21,7 +21,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import com.example.weatherapp.R;
+import com.example.weatherapp.data.weather.model.ReverseGeocodingResponse;
+import com.example.weatherapp.data.weather.repository.WeatherRepository;
+import com.example.weatherapp.ui.utils.UserLocationProvider;
 import com.example.weatherapp.ui.widget.WeatherWidgetProvider;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SystemSettingsFragment extends Fragment {
 
@@ -38,6 +47,9 @@ public class SystemSettingsFragment extends Fragment {
     private static final String THEME_KEY = "theme";
     private static final String CITY_KEY = "city";
 
+    private WeatherRepository weatherRepository;
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,6 +65,12 @@ public class SystemSettingsFragment extends Fragment {
         ImageView infoMapProvider = view.findViewById(R.id.infoMapProvider);
         ImageView infoTheme = view.findViewById(R.id.infoTheme);
         ImageView infoCity = view.findViewById(R.id.infoWidgetCity);
+        ImageView btnDetectCity = view.findViewById(R.id.btnDetectCity);
+
+
+        btnDetectCity.setOnClickListener(v -> detectCity());
+        weatherRepository = new WeatherRepository(requireContext());
+
 
 
         // Messages for info dialogs
@@ -82,7 +100,7 @@ public class SystemSettingsFragment extends Fragment {
 
         infoCity.setOnClickListener(v -> showInfoDialog(
                 "Widget City",
-                "Enter the name of the city you want the home screen widget to show weather for.\n\n" +
+                "Enter the name of the city you want the home screen widget to show weather for, or press the icon on the right for your current location.\n\n" +
                         "After saving:\n" +
                         "1. Long-press on an empty space on your home screen.\n" +
                         "2. Tap \"Widgets\".\n" +
@@ -126,7 +144,7 @@ public class SystemSettingsFragment extends Fragment {
 
         applyTheme(selectedTheme);
         saveCity();
-        Toast.makeText(requireContext(), "Saved units: " + selectedUnit + " ,saved map: " + selectedMap + " ,saved theme: " + selectedTheme , Toast.LENGTH_LONG).show();
+        Toast.makeText(requireContext(),"Settings saved",Toast.LENGTH_SHORT).show();
     }
 
     private int getUnitIndex(String unit) {
@@ -219,4 +237,47 @@ public class SystemSettingsFragment extends Fragment {
                 .setPositiveButton("OK", null)
                 .show();
     }
+
+
+
+    private void detectCity() {
+        UserLocationProvider.getCurrentLocation(requireContext(), new UserLocationProvider.LocationCallback() {
+            @Override
+            public void onLocationReceived(double latitude, double longitude) {
+                fetchCityFromCoordinates(latitude, longitude);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Toast.makeText(requireContext(), "Location Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fetchCityFromCoordinates(double lat, double lon) {
+        weatherRepository.getCityByCoordinates(lat, lon).enqueue(new Callback<List<ReverseGeocodingResponse>>() {
+            @Override
+            public void onResponse(Call<List<ReverseGeocodingResponse>> call, Response<List<ReverseGeocodingResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    ReverseGeocodingResponse data = response.body().get(0);
+                    String cityName = data.getName();
+                    if (cityName != null) {
+                        cityEditText.setText(cityName);
+                        Toast.makeText(requireContext(), "Detected city: " + cityName, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(requireContext(), "City name not found in response", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Failed to get city from coordinates", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ReverseGeocodingResponse>> call, Throwable t) {
+                Toast.makeText(requireContext(), "API error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 }

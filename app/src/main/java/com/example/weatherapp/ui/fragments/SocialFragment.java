@@ -102,6 +102,7 @@ public class SocialFragment extends Fragment implements AddPostDialog.OnPostAdde
     }
 
     private void showAddPostDialog() {
+        if (!isAdded()) return; // Check if the fragment is still attached in order to use getContext or requireContext
         AddPostDialog dialog = new AddPostDialog(requireContext(), this);
         dialog.show();
     }
@@ -113,6 +114,7 @@ public class SocialFragment extends Fragment implements AddPostDialog.OnPostAdde
 
     private void loadPosts() {
         try {
+            if (!isAdded()) return; // Check if the fragment is still attached in order to use getContext or requireContext
             FirebaseUtils.loadWeatherPosts(getContext(), posts -> {
                 postList.clear();
                 postList.addAll(posts);
@@ -124,6 +126,7 @@ public class SocialFragment extends Fragment implements AddPostDialog.OnPostAdde
     }
 
     private void setupFilters(View root) {
+        if (!isAdded()) return; // Check if the fragment is still attached in order to use getContext or requireContext
         spinnerLocationFilter = root.findViewById(R.id.spinnerLocationFilter);
         spinnerTempFilter = root.findViewById(R.id.spinnerTempFilter);
 

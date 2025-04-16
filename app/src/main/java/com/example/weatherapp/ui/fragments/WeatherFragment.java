@@ -120,6 +120,7 @@ public class WeatherFragment extends Fragment {
         });
         // favorite button
         btnFavorite.setOnClickListener(v -> {
+            if (!isAdded()) return; // Check if the fragment is still attached in order to use getContext or requireContext
             String city = tvWeatherLocation.getText().toString().trim();
             if (!city.isEmpty()) {
                 if (isCityFavorite) {
@@ -137,6 +138,7 @@ public class WeatherFragment extends Fragment {
         });
 
         btnAskAI.setOnClickListener(v -> {
+            if (!isAdded()) return; // Check if the fragment is still attached in order to use getContext or requireContext
             WeatherTipDialog askAiDialog = new WeatherTipDialog(requireContext(), tvWeatherLocation.getText().toString(),tvWeatherTemperature.getText().toString(), tvWeatherWindSpeed.getText().toString(), tvWeatherHumidity.getText().toString(), tvWeatherVisibility.getText().toString(), tvWeatherDescription.getText().toString(), tvAirQualityIndex.getText().toString(), currentForecastList);
             askAiDialog.show();
         });
@@ -167,18 +169,21 @@ public class WeatherFragment extends Fragment {
 
         // RecyclerView setup for forecast
         forecastRecyclerView = view.findViewById(R.id.forecastRecyclerView);
+        if (!isAdded()) return; // Check if the fragment is still attached in order to use getContext or requireContext
         forecastRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         forecastAdapter = new ForecastAdapter(getContext());
         forecastRecyclerView.setAdapter(forecastAdapter);
     }
 
     private void initializeDependencies() {
+        if (!isAdded()) return; // Check if the fragment is still attached in order to use getContext or requireContext
         weatherRepository = new WeatherRepository(getContext());
         forecastProcessor = new ForecastProcessor();
     }
 
     @Override
     public void onResume() {
+        if (!isAdded()) return; // Check if the fragment is still attached in order to use getContext or requireContext
         super.onResume();
         SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         String newUnit = prefs.getString(UNIT_KEY, "metric");
@@ -202,6 +207,7 @@ public class WeatherFragment extends Fragment {
     }
 
     private void fetchWeatherByLocation() {
+        if (!isAdded()) return; // Check if the fragment is still attached in order to use getContext or requireContext
         UserLocationProvider.getCurrentLocation(requireContext(), new UserLocationProvider.LocationCallback() {
             @Override
             public void onLocationReceived(double latitude, double longitude) {
@@ -350,6 +356,7 @@ public class WeatherFragment extends Fragment {
 
     private void updateWeatherUI(WeatherResponse weather) {
         tvWeatherLocation.setText(weather.getCity());
+        if (!isAdded()) return; // Check if the fragment is still attached in order to use getContext or requireContext
         checkIfCityIsFavorite(getContext(), weather.getCity());
         String tempUnitSymbol;
         String windSpeedUnit;
@@ -387,6 +394,7 @@ public class WeatherFragment extends Fragment {
     }
 
     private void showToast(String message) {
+        if (!isAdded()) return; // Check if the fragment is still attached in order to use getContext or requireContext
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 
