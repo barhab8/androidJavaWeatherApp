@@ -32,9 +32,8 @@ import com.example.weatherapp.ui.utils.ChartHelper;
 import com.example.weatherapp.ui.utils.FirebaseUtils;
 import com.example.weatherapp.ui.utils.UIHelper;
 import com.example.weatherapp.ui.utils.ForecastProcessor;
+import com.example.weatherapp.ui.utils.UserLocationProvider;
 import com.github.mikephil.charting.charts.LineChart;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -61,7 +60,6 @@ public class WeatherFragment extends Fragment {
     private RecyclerView forecastRecyclerView;
     private ForecastAdapter forecastAdapter;
     private android.widget.LinearLayout rootLayout;
-    private FusedLocationProviderClient fusedLocationProviderClient;
     private LineChart forecastChart;
     private android.widget.ImageButton btnAskAI;
 
@@ -175,7 +173,6 @@ public class WeatherFragment extends Fragment {
     }
 
     private void initializeDependencies() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
         weatherRepository = new WeatherRepository(getContext());
         forecastProcessor = new ForecastProcessor();
     }
@@ -204,21 +201,20 @@ public class WeatherFragment extends Fragment {
         }
     }
 
-
-    // Modified method for location-based weather fetching using lat/lon
     private void fetchWeatherByLocation() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
-                if (location != null) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    fetchWeatherDataByCoordinates(latitude, longitude);
-                } else {
-                    showToast("Unable to fetch location.");
-                }
-            }).addOnFailureListener(e -> showToast("Error fetching location: " + e.getMessage()));
-        }
+        UserLocationProvider.getCurrentLocation(requireContext(), new UserLocationProvider.LocationCallback() {
+            @Override
+            public void onLocationReceived(double latitude, double longitude) {
+                fetchWeatherDataByCoordinates(latitude, longitude);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                showToast(errorMessage);
+            }
+        });
     }
+
 
     //City-based API calls
     public void fetchWeatherDataByCity(String city, boolean toast) {

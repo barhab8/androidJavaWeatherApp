@@ -3,7 +3,6 @@ package com.example.weatherapp.ui.widget;
 import static com.example.weatherapp.ui.fragments.WeatherFragment.ICON_URL_TEMPLATE;
 import static com.example.weatherapp.ui.fragments.WeatherFragment.UNIT;
 
-import android.Manifest;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -11,20 +10,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.RemoteViews;
-
-import androidx.core.content.ContextCompat;
-
 import com.example.weatherapp.R;
 import com.example.weatherapp.data.weather.model.GeocodingResponse;
 import com.example.weatherapp.data.weather.model.WeatherResponse;
 import com.example.weatherapp.data.weather.repository.WeatherRepository;
 import com.example.weatherapp.ui.activitys.MainScreenActivity;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
+import com.example.weatherapp.ui.utils.UserLocationProvider;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -70,21 +64,20 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
     }
 
     private void getLocationAndFetchWeather(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
-                if (location != null) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    updateWidget(context, appWidgetManager, appWidgetId, latitude, longitude);
-                } else {
-                    updateWidget(context, appWidgetManager, appWidgetId, 32.0753, 34.8086); // Default to Givatayim
-                }
-            }).addOnFailureListener(e -> updateWidgetWithError(context, appWidgetManager, appWidgetId, "Location Unavailable"));
-        } else {
-            updateWidgetWithError(context, appWidgetManager, appWidgetId, "Permission Needed");
-        }
+        UserLocationProvider.getCurrentLocation(context, new UserLocationProvider.LocationCallback() {
+            @Override
+            public void onLocationReceived(double latitude, double longitude) {
+                updateWidget(context, appWidgetManager, appWidgetId, latitude, longitude);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Log.e("WeatherWidget", "Location error: " + errorMessage);
+                updateWidgetWithError(context, appWidgetManager, appWidgetId, errorMessage);
+            }
+        });
     }
+
 
     private void fetchWeatherByCity(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String city) {
         WeatherRepository weatherRepo = new WeatherRepository(context);

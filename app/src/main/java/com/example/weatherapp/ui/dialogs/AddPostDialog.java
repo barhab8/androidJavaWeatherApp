@@ -18,6 +18,7 @@ import com.example.weatherapp.R;
 import com.example.weatherapp.data.weather.model.WeatherResponse;
 import com.example.weatherapp.data.weather.repository.WeatherRepository;
 import com.example.weatherapp.ui.utils.FirebaseUtils;
+import com.example.weatherapp.ui.utils.UserLocationProvider;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
@@ -78,29 +79,33 @@ public class AddPostDialog extends Dialog {
     }
 
     private void autoFetchWeatherOnOpen() {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-                if (location != null) {
-                    fetchWeatherByCoordinates(location.getLatitude(), location.getLongitude());
-                }
-            });
-        } else {
-            textViewWeatherPreview.setText("Location permission not granted.");
-        }
-    }
+        UserLocationProvider.getCurrentLocation(getContext(), new UserLocationProvider.LocationCallback() {
+            @Override
+            public void onLocationReceived(double latitude, double longitude) {
+                fetchWeatherByCoordinates(latitude, longitude);
+            }
 
-    private void fetchCurrentLocationWeather() {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            textViewWeatherPreview.setText("Location permission not granted.");
-            return;
-        }
-
-        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-            if (location != null) {
-                fetchWeatherByCoordinates(location.getLatitude(), location.getLongitude());
+            @Override
+            public void onError(String errorMessage) {
+                textViewWeatherPreview.setText(errorMessage);
             }
         });
     }
+
+    private void fetchCurrentLocationWeather() {
+        UserLocationProvider.getCurrentLocation(getContext(), new UserLocationProvider.LocationCallback() {
+            @Override
+            public void onLocationReceived(double latitude, double longitude) {
+                fetchWeatherByCoordinates(latitude, longitude);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                textViewWeatherPreview.setText(errorMessage);
+            }
+        });
+    }
+
 
     private void fetchWeatherByCoordinates(double lat, double lon) {
         weatherRepository.fetchWeatherByCoordinates(lat, lon).enqueue(new Callback<WeatherResponse>() {

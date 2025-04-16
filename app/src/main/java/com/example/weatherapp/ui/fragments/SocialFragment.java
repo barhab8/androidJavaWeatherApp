@@ -37,7 +37,6 @@ public class SocialFragment extends Fragment implements AddPostDialog.OnPostAdde
         adapter = new PostsAdapter(postList);
         recyclerViewPosts.setAdapter(adapter);
 
-        // Set up FAB for adding new posts
         FloatingActionButton fabAddPost = root.findViewById(R.id.fabAddPost);
         fabAddPost.setOnClickListener(v -> showAddPostDialog());
 

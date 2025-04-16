@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.weatherapp.R;
 import com.example.weatherapp.ui.fragments.MapFragment;
 import com.example.weatherapp.ui.fragments.SocialFragment;
-import com.example.weatherapp.ui.fragments.UserDetailsFragment;
 import com.example.weatherapp.ui.fragments.WeatherFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

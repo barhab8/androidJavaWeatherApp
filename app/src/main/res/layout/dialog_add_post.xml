@@ -28,27 +28,22 @@
                 style="@style/Widget.Material3.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="What's the weather like?"
+                android:hint="What's the Weather like?"
+                app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                app:boxBackgroundMode="filled"
                 app:boxCornerRadiusTopStart="16dp"
                 app:boxCornerRadiusTopEnd="16dp"
                 app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:boxBackgroundColor="?attr/colorSurfaceVariant"
-                app:boxBackgroundMode="filled"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:boxCornerRadiusBottomEnd="16dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextDialogPost"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapSentences|textMultiLine"
-                    android:minLines="3"
-                    android:maxLines="5"
-                    android:gravity="top|start"
-                    android:textSize="16sp"
-                    android:padding="10dp"/>
+                    android:maxLines="5" />
             </com.google.android.material.textfield.TextInputLayout>
+
+
 
 
             <TextView
