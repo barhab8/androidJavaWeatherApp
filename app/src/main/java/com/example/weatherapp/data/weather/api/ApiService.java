@@ -3,6 +3,7 @@ package com.example.weatherapp.data.weather.api;
 import com.example.weatherapp.data.weather.model.AirPollutionResponse;
 import com.example.weatherapp.data.weather.model.ForecastResponse;
 import com.example.weatherapp.data.weather.model.GeocodingResponse;
+import com.example.weatherapp.data.weather.model.ReverseGeocodingResponse;
 import com.example.weatherapp.data.weather.model.WeatherResponse;
 
 import java.util.List;
@@ -49,5 +50,13 @@ public interface ApiService {
             @Query("limit") int limit,
             @Query("appid") String apiKey
     );
+
+    @GET("geo/1.0/reverse")
+    Call<List<ReverseGeocodingResponse>> getCityByCoordinates(
+            @Query("lat") double latitude,
+            @Query("lon") double longitude,
+            @Query("appid") String apiKey
+    );
+
 
 }

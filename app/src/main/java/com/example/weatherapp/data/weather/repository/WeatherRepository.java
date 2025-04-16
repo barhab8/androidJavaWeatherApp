@@ -8,6 +8,7 @@ import com.example.weatherapp.data.weather.api.ApiService;
 import com.example.weatherapp.data.weather.model.AirPollutionResponse;
 import com.example.weatherapp.data.weather.model.ForecastResponse;
 import com.example.weatherapp.data.weather.model.GeocodingResponse;
+import com.example.weatherapp.data.weather.model.ReverseGeocodingResponse;
 import com.example.weatherapp.data.weather.model.WeatherResponse;
 
 import java.util.List;
@@ -57,6 +58,9 @@ public class WeatherRepository {
         return apiService.getCoordinatesByCity(cityName, 1, GEO_API_KEY); // Limit to 1 result
     }
 
+    public Call<List<ReverseGeocodingResponse>> getCityByCoordinates(double lat, double lon) {
+        return apiService.getCityByCoordinates(lat,lon, GEO_API_KEY);
+    }
     // air pollution
     public Call<AirPollutionResponse> getAirPollutionData(double latitude, double longitude) {
         return apiService.getAirPollutionDataByCoordinates(latitude, longitude, API_KEY);
