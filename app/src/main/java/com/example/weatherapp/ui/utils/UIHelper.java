@@ -18,10 +18,6 @@ public class UIHelper {
         int backgroundResId;
 
         switch (weatherIcon) {
-            case "01d":
-            case "01n":
-                backgroundResId = R.drawable.clear_sky_bg;
-                break;
             case "02d":
             case "02n":
                 backgroundResId = R.drawable.few_clouds_bg;

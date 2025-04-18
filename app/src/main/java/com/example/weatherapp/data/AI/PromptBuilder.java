@@ -63,7 +63,7 @@ public class PromptBuilder {
                 "\n" +
                 "Weather Description:" + weatherDescription + "\n" +
                 "\n" +
-                "Air Quality Index (AQI):" + aqi + "(1=Good, 5=Very Poor)\n" +
+                "Air Quality Index (AQI):" + aqi + "(Air Quality Index. Possible values: 1, 2, 3, 4, 5. Where 1 = Good, 2 = Fair, 3 = Moderate, 4 = Poor, 5 = Very Poor)\n" +
                 "\n" +
                 "City:" + city + "\n" +
                 "\n" +
