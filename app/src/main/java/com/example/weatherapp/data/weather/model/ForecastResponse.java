@@ -2,6 +2,7 @@ package com.example.weatherapp.data.weather.model;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
+import static com.example.weatherapp.data.weather.model.WeatherCommonModels.*;
 
 public class ForecastResponse {
 
@@ -19,14 +20,13 @@ public class ForecastResponse {
         return city;
     }
 
-    // Nested classes for forecast items and city details
     public static class ForecastItem {
 
         @SerializedName("dt_txt")
         private String dateTime;
 
         @SerializedName("dt")
-        private String DT;
+        private String dt;
 
         @SerializedName("main")
         private Main main;
@@ -40,8 +40,9 @@ public class ForecastResponse {
         public String getDateTime() {
             return dateTime;
         }
-        public String getDT() {
-            return DT;
+
+        public String getDt() {
+            return dt;
         }
 
         public Main getMain() {
@@ -63,31 +64,6 @@ public class ForecastResponse {
 
         public double getTemp() {
             return temp;
-        }
-    }
-
-    public static class Weather {
-        @SerializedName("description")
-        private String description;
-
-        @SerializedName("icon")
-        private String icon;
-
-        public String getDescription() {
-            return description;
-        }
-
-        public String getIcon() {
-            return icon;
-        }
-    }
-
-    public static class Wind {
-        @SerializedName("speed")
-        private double speed;
-
-        public double getSpeed() {
-            return speed;
         }
     }
 

@@ -381,7 +381,7 @@ public class WeatherFragment extends Fragment {
         tvWeatherTemperature.setText(String.format("%s%s", weather.getMain().getTemp(), tempUnitSymbol));
         tvWeatherDescription.setText(weather.getWeather()[0].getDescription());
         tvWeatherHumidity.setText(String.format("Humidity: %s%%", weather.getMain().getHumidity()));
-        tvWeatherVisibility.setText(String.format("Visibility: %d km", Integer.parseInt(weather.getVisibilit()) / 1000));
+        tvWeatherVisibility.setText(String.format("Visibility: %d km", Integer.parseInt(weather.getVisibility()) / 1000));
         tvWeatherWindSpeed.setText(String.format("Wind Speed: %.1f%s", windSpeed, windSpeedUnit));
         tvWeatherWindDegree.setText(String.format("Wind Degree: %s°", weather.getWind().getDegree()));
 

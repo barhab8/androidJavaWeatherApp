@@ -23,83 +23,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class ChartHelper {
-
-    /**
-     * Populates and configures the AQI BarChart.
-     *
-     * @param chart          The BarChart to populate.
-     * @param airQualityList The list of air quality data points.
-     */
-    public static void populateAQIChart(BarChart chart, List<AirPollutionResponse.AirQuality> airQualityList) {
-        // Create a list of BarEntry for the chart
-        List<BarEntry> entries = new ArrayList<>();
-        List<String> labels = new ArrayList<>();
-
-        for (int i = 0; i < airQualityList.size(); i++) {
-            AirPollutionResponse.AirQuality airQuality = airQualityList.get(i);
-            entries.add(new BarEntry(i, airQuality.getMain().getAqi()));
-
-            // Convert timestamp to readable date
-            String dateLabel = new SimpleDateFormat("MM/dd HH:mm", Locale.getDefault())
-                    .format(new Date(airQuality.getTimestamp() * 1000));
-            labels.add(dateLabel);
-        }
-
-        // Create a dataset and give it a type
-        BarDataSet dataSet = new BarDataSet(entries, "AQI Levels");
-        dataSet.setColors(getAQIColors(entries)); // Set custom colors for AQI levels
-        dataSet.setValueTextColor(Color.WHITE); // Value text color
-        dataSet.setValueTextSize(10f);
-
-        // Create the BarData object and set it to the chart
-        BarData barData = new BarData(dataSet);
-        chart.setData(barData);
-
-        // Disable X-axis
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setEnabled(false); // Remove the X-axis entirely
-
-        // Configure Y-axis (AQI values)
-        YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setTextColor(Color.WHITE);
-        leftAxis.setAxisMinimum(0f); // Minimum AQI
-        leftAxis.setAxisMaximum(5f); // AQI ranges from 1 to 5
-
-        YAxis rightAxis = chart.getAxisRight();
-        rightAxis.setEnabled(false); // Disable the right Y-axis
-
-        // Configure chart appearance
-        chart.getLegend().setTextColor(Color.WHITE);
-        chart.getDescription().setEnabled(false); // Disable description text
-        chart.invalidate(); // Refresh the chart
-    }
-
     /**
      * Returns the appropriate colors for the AQI levels.
      *
-     * @param entries The list of BarEntry containing AQI levels.
+     * @param forecastList The list of BarEntry containing AQI levels.
      * @return A list of colors for the entries.
      */
-    private static List<Integer> getAQIColors(List<BarEntry> entries) {
-        List<Integer> colors = new ArrayList<>();
-        for (BarEntry entry : entries) {
-            float aqi = entry.getY();
-            if (aqi == 1) {
-                colors.add(Color.GREEN); // Good
-            } else if (aqi == 2) {
-                colors.add(Color.YELLOW); // Moderate
-            } else if (aqi == 3) {
-                colors.add(Color.parseColor("#FFA500")); // Unhealthy for sensitive groups
-            } else if (aqi == 4) {
-                colors.add(Color.RED); // Unhealthy
-            } else if (aqi == 5) {
-                colors.add(Color.MAGENTA); // Very Unhealthy
-            } else {
-                colors.add(Color.GRAY); // Default
-            }
-        }
-        return colors;
-    }
 
     public static void populateForecastChart(LineChart chart, List<ForecastResponse.ForecastItem> forecastList) {
         // Prepare entries for the chart
@@ -112,7 +41,7 @@ public class ChartHelper {
 
             // Add temperature data as an Entry
             entries.add(new Entry(i, (float) item.getMain().getTemp()));
-            String dateLabel = dateFormat.format(new Date( Integer.parseInt(item.getDT()) * 1000));
+            String dateLabel = dateFormat.format(new Date( Integer.parseInt(item.getDt()) * 1000));
             labels.add(dateLabel);
         }
 

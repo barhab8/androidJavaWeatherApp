@@ -1,6 +1,7 @@
 package com.example.weatherapp.data.weather.model;
 
 import com.google.gson.annotations.SerializedName;
+import static com.example.weatherapp.data.weather.model.WeatherCommonModels.*;
 
 public class WeatherResponse {
 
@@ -19,7 +20,7 @@ public class WeatherResponse {
     @SerializedName("wind")
     private Wind wind;
 
-    // Inner classes for nested JSON objects
+    // Inner class for temperature and humidity
     public static class Main {
         @SerializedName("temp")
         private double temp;
@@ -30,36 +31,36 @@ public class WeatherResponse {
         @SerializedName("humidity")
         private int humidity;
 
-        public double getTemp() { return temp; }
-        public double getFeelsLike() { return feelsLike; }
-        public int getHumidity() { return humidity; }
+        public double getTemp() {
+            return temp;
+        }
+
+        public double getFeelsLike() {
+            return feelsLike;
+        }
+
+        public int getHumidity() {
+            return humidity;
+        }
     }
 
-    public static class Weather {
-        @SerializedName("description")
-        private String description;
-
-        @SerializedName("icon")
-        private String icon;
-
-        public String getDescription() { return description; }
-        public String getIcon() { return icon; }
+    public String getCity() {
+        return city;
     }
 
-    public static class Wind {
-        @SerializedName("speed")
-        private double speed;
-
-        @SerializedName("deg")
-        private int degree;
-
-        public double getSpeed() { return speed; }
-        public int getDegree() { return degree; }
+    public String getVisibility() {
+        return visibility;
     }
 
-    public String getCity() { return city; }
-    public String getVisibilit() { return visibility; }
-    public Main getMain() { return main; }
-    public Weather[] getWeather() { return weather; }
-    public Wind getWind() { return wind; }
+    public Main getMain() {
+        return main;
+    }
+
+    public Weather[] getWeather() {
+        return weather;
+    }
+
+    public Wind getWind() {
+        return wind;
+    }
 }
