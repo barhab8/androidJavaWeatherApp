@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.data.weather.model.ForecastResponse;
-import com.example.weatherapp.ui.utils.ForecastProcessor;
+import com.example.weatherapp.ui.utils.UIHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -44,9 +44,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         // Get the forecast item at the current position
         ForecastResponse.ForecastItem item = forecastList.get(position);
 
-        // Initialize ForecastProcessor and format the date
-        ForecastProcessor forecastProcessor = new ForecastProcessor();
-        String formattedDate = forecastProcessor.formatDate(item.getDateTime());
+        // format the date
+        String formattedDate = UIHelper.formatDate(item.getDateTime());
 
         // Determine the temperature unit symbol
         String tempUnitSymbol;

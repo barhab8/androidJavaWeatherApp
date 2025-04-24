@@ -28,10 +28,8 @@ import com.example.weatherapp.data.weather.model.WeatherResponse;
 import com.example.weatherapp.data.weather.repository.WeatherRepository;
 import com.example.weatherapp.ui.adapters.ForecastAdapter;
 import com.example.weatherapp.ui.dialogs.WeatherTipDialog;
-import com.example.weatherapp.ui.utils.ChartHelper;
 import com.example.weatherapp.ui.utils.FirebaseUtils;
 import com.example.weatherapp.ui.utils.UIHelper;
-import com.example.weatherapp.ui.utils.ForecastProcessor;
 import com.example.weatherapp.ui.utils.UserLocationProvider;
 import com.github.mikephil.charting.charts.LineChart;
 import com.squareup.picasso.Picasso;
@@ -70,7 +68,6 @@ public class WeatherFragment extends Fragment {
 
     // Data & Utilities
     private WeatherRepository weatherRepository;
-    private ForecastProcessor forecastProcessor;
     private List<ForecastResponse.ForecastItem> currentForecastList = new ArrayList<>();
 
     // boolean for weather the star is filled or not - city favorite or not.
@@ -178,7 +175,6 @@ public class WeatherFragment extends Fragment {
     private void initializeDependencies() {
         if (!isAdded()) return; // Check if the fragment is still attached in order to use getContext or requireContext
         weatherRepository = new WeatherRepository(getContext());
-        forecastProcessor = new ForecastProcessor();
     }
 
     @Override
@@ -247,10 +243,10 @@ public class WeatherFragment extends Fragment {
             public void onResponse(Call<ForecastResponse> call, Response<ForecastResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<ForecastResponse.ForecastItem> forecastList = response.body().getForecastList();
-                    Log.d("Forecast", forecastProcessor.getDailyForecast(forecastList).toString());
-                    forecastAdapter.setForecastList(forecastProcessor.getDailyForecast(forecastList));
-                    currentForecastList = forecastProcessor.getDailyForecast(forecastList);
-                    ChartHelper.populateForecastChart(forecastChart, forecastList);
+                    Log.d("Forecast", UIHelper.getDailyForecast(forecastList).toString());
+                    forecastAdapter.setForecastList(UIHelper.getDailyForecast(forecastList));
+                    currentForecastList = UIHelper.getDailyForecast(forecastList);
+                    UIHelper.populateForecastChart(forecastChart, forecastList);
                 } else {
                     if(toast) {
                         showToast("Failed to fetch forecast.");
@@ -325,9 +321,9 @@ public class WeatherFragment extends Fragment {
             public void onResponse(Call<ForecastResponse> call, Response<ForecastResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<ForecastResponse.ForecastItem> forecastList = response.body().getForecastList();
-                    forecastAdapter.setForecastList(forecastProcessor.getDailyForecast(forecastList));
-                    currentForecastList = forecastProcessor.getDailyForecast(forecastList);
-                    ChartHelper.populateForecastChart(forecastChart, forecastList);
+                    forecastAdapter.setForecastList(UIHelper.getDailyForecast(forecastList));
+                    currentForecastList = UIHelper.getDailyForecast(forecastList);
+                    UIHelper.populateForecastChart(forecastChart, forecastList);
                 } else {
                     showToast("Failed to fetch forecast.");
                 }

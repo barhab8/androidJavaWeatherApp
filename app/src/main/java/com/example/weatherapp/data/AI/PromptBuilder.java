@@ -1,7 +1,7 @@
 package com.example.weatherapp.data.AI;
 
 import com.example.weatherapp.data.weather.model.ForecastResponse;
-import com.example.weatherapp.ui.utils.ForecastProcessor;
+import com.example.weatherapp.ui.utils.UIHelper;
 
 import java.util.List;
 
@@ -30,10 +30,9 @@ public class PromptBuilder {
         }
 
         StringBuilder forecastSection = new StringBuilder();
-        ForecastProcessor forecastProcessor = new ForecastProcessor();
 
         for (ForecastResponse.ForecastItem item : forecastList) {
-            String date = forecastProcessor.formatDate(item.getDateTime());
+            String date = UIHelper.formatDate(item.getDateTime());
             String forecastTemp = String.format("%.1f%s", item.getMain().getTemp(), tempUnitSymbol);
             String desc = item.getWeather().get(0).getDescription();
 
