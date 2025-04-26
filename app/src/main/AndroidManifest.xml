@@ -76,14 +76,7 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
-        <receiver android:name=".ui.widget.WidgetUpdateService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".ui.widget.WidgetBootReceiver"
+        <receiver android:name=".ui.widget.WeatherWidgetReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

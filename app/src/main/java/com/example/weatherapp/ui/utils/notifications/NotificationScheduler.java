@@ -84,7 +84,7 @@ public class NotificationScheduler {
     }
 
     private static void requestExactAlarmPermission(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // Only required on Android 12+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
             context.startActivity(intent);
         }

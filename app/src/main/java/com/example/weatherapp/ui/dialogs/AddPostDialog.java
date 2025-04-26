@@ -20,8 +20,7 @@ import com.example.weatherapp.data.weather.model.WeatherResponse;
 import com.example.weatherapp.data.weather.repository.WeatherRepository;
 import com.example.weatherapp.ui.utils.FirebaseUtils;
 import com.example.weatherapp.ui.utils.UserLocationProvider;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,7 +37,6 @@ public class AddPostDialog extends Dialog {
     private Button buttonUseCurrentLocation;
     private Button buttonFetchWeather;
 
-    private final FusedLocationProviderClient fusedLocationClient;
     private final WeatherRepository weatherRepository;
     private final OnPostAddedListener listener;
 
@@ -51,7 +49,6 @@ public class AddPostDialog extends Dialog {
 
     public AddPostDialog(@NonNull Context context, OnPostAddedListener listener) {
         super(context);
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         weatherRepository = new WeatherRepository(context);
         this.listener = listener;
     }
