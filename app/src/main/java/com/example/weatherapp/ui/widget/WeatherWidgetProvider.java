@@ -18,6 +18,7 @@ import com.example.weatherapp.data.weather.model.GeocodingResponse;
 import com.example.weatherapp.data.weather.model.WeatherResponse;
 import com.example.weatherapp.data.weather.repository.WeatherRepository;
 import com.example.weatherapp.ui.activitys.MainScreenActivity;
+import com.example.weatherapp.ui.activitys.SplashScreenActivity;
 import com.example.weatherapp.ui.utils.UserLocationProvider;
 import com.squareup.picasso.Picasso;
 
@@ -137,7 +138,6 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
                     String iconUrl = String.format(ICON_URL_TEMPLATE, weather.getWeather()[0].getIcon());
 
                      new Thread(() -> {
-                        Log.d("WidgetScreen", "Loading icon from URL: " + iconUrl);
                         try {
                             Bitmap bitmap = Picasso.get().load(iconUrl).get();
                             if (bitmap != null) {
@@ -150,7 +150,6 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
                             Log.e("WidgetScreen", "Error loading image: " + e.getMessage());
                         }
                         appWidgetManager.updateAppWidget(appWidgetId, views);
-                        Log.d("WidgetScreen", "Widget updated for widget id " + appWidgetId);
                     }).start();
                 } else {
                     updateWidgetWithError(context, appWidgetManager, appWidgetId, "Weather Error");
@@ -173,7 +172,7 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
     }
 
     private void setWidgetClickListener(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        Intent intent = new Intent(context, MainScreenActivity.class);
+        Intent intent = new Intent(context, SplashScreenActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 

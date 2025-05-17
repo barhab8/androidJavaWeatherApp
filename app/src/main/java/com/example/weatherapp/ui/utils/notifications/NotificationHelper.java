@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.ui.activitys.MainScreenActivity;
+import com.example.weatherapp.ui.activitys.SplashScreenActivity;
 
 public class NotificationHelper {
     private static final String TAG = "notification";
@@ -31,7 +32,7 @@ public class NotificationHelper {
         }
 
         // Intent to open MainScreenActivity when clicked
-        Intent intent = new Intent(context, MainScreenActivity.class);
+        Intent intent = new Intent(context, SplashScreenActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         // Build notification

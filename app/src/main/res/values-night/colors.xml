@@ -3,5 +3,4 @@
     <color name="onPrimary">#000000</color>
     <color name="background">#121212</color>
     <color name="onBackground">#FFFFFF</color>
-    <!-- Add more Material 3 colors for night -->
 </resources>
