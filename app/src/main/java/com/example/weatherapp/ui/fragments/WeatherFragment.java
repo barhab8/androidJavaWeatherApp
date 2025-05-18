@@ -91,14 +91,6 @@ public class WeatherFragment extends Fragment {
 
         initializeUI(view);
         initializeDependencies();
-        // Listen for unit change updates from SystemSettingsFragment
-        requireActivity().getSupportFragmentManager().setFragmentResultListener("unit_changed", this, (requestKey, result) -> {
-            SharedPreferences prefs = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-            UNIT = prefs.getString(UNIT_KEY, "metric");
-            weatherRepository.setUnit(requireContext(), UNIT);
-            refreshWeatherData(); // Refresh weather based on new unit
-        });
-
         // Handle location-based weather fetching
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fetchWeatherByLocation();
