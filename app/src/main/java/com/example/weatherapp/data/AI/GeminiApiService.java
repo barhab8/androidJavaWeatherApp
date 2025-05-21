@@ -1,4 +1,3 @@
-// GeminiApiService.java
 package com.example.weatherapp.data.AI;
 
 import retrofit2.Call;

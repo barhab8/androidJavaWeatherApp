@@ -1,4 +1,3 @@
-// GeminiResponse.java
 package com.example.weatherapp.data.AI;
 
 import com.google.gson.annotations.SerializedName;

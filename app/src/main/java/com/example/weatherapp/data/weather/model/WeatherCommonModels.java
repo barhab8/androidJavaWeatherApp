@@ -1,4 +1,3 @@
-// WeatherCommonModels.java
 package com.example.weatherapp.data.weather.model;
 
 import com.google.gson.annotations.SerializedName;
